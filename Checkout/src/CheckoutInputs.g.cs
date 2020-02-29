@@ -17,7 +17,13 @@ namespace Checkout
     public class CheckoutInputs: S3Args
     {
 		/// <summary>
-		/// The width.
+		/// The desired quantity of checkout stations.
+		/// </summary>
+		[JsonProperty("Checkout Stations")]
+		public double CheckoutStations {get;}
+
+		/// <summary>
+		/// Width between checkout stations.
 		/// </summary>
 		[JsonProperty("Aisle Width")]
 		public double AisleWidth {get;}
@@ -30,6 +36,7 @@ namespace Checkout
         /// </summary>
         public CheckoutInputs() : base()
         {
+			this.CheckoutStations = 20;
 			this.AisleWidth = 5;
 
         }
@@ -40,8 +47,9 @@ namespace Checkout
         /// </summary>
         /// <returns></returns>
         [JsonConstructor]
-        public CheckoutInputs(double aislewidth, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
+        public CheckoutInputs(double checkoutstations, double aislewidth, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
         {
+			this.CheckoutStations = checkoutstations;
 			this.AisleWidth = aislewidth;
 
 		}

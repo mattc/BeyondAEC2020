@@ -28,6 +28,10 @@ namespace Checkout
             var lines = checkout.Perimeter.Segments().OrderBy(l => l.Length()).ToList();
             var ang = Math.Atan2(lines.First().End.Y - lines.First().Start.Y, lines.First().End.X - lines.First().Start.X) * (180 / Math.PI);
             var sequence = new Line(lines[0].Midpoint(), lines[1].Midpoint());
+            if (sequence.Start.X < sequence.End.X)
+            {
+                sequence = new Line(sequence.End, sequence.Start);
+            }
             var insert = sequence.Start;
             var counter = MakeCounter(false);
             var output = new CheckoutOutputs(0.0);
@@ -37,7 +41,8 @@ namespace Checkout
                                           register.height,
                                           register.material));
             }
-            while (insert.DistanceTo(sequence.End) >= 1.2 + input.AisleWidth)
+            var checkouts = 1;
+            while (insert.DistanceTo(sequence.End) >= 1.2 + input.AisleWidth && checkouts < input.CheckoutStations)
             {
                 insert = sequence.PositionAt(1.2 + input.AisleWidth);
                 sequence = new Line(insert, sequence.End);
@@ -48,6 +53,7 @@ namespace Checkout
                                               register.height,
                                               register.material));
                 }
+                checkouts++;
             }
             return output;
         }
@@ -74,7 +80,7 @@ namespace Checkout
                 new Register
                 {
                     polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(2.5, 0.6))
-                            .MoveFromTo(Vector3.Origin, new Vector3(-0.3, 0.6)),
+                            .MoveFromTo(Vector3.Origin, new Vector3(-0.3, -0.6)),
                     height = 0.9,
                     material = conveyer
                 },
@@ -87,7 +93,7 @@ namespace Checkout
                 new Register
                 {
                     polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(0.6, 0.6))
-                            .MoveFromTo(Vector3.Origin, new Vector3(1.5, 0.0)),
+                            .MoveFromTo(Vector3.Origin, new Vector3(-1.5, 0.0)),
                     height = 0.7,
                     material = cash
                 });
@@ -95,7 +101,7 @@ namespace Checkout
                 new Register
                 {
                     polygon = Polygon.Rectangle(Vector3.Origin, new Vector3(2.5, 0.6))
-                            .MoveFromTo(Vector3.Origin, new Vector3(1.1, -0.6)),
+                            .MoveFromTo(Vector3.Origin, new Vector3(-1.8, 0.6)),
                     height = 0.9,
                     material = conveyer
                 });

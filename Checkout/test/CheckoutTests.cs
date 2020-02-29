@@ -10,7 +10,7 @@ namespace Checkout.Tests
         [Fact]
         public void CheckoutTest()
         {
-            var inputs = new CheckoutInputs(2.0, "", "", new Dictionary<string, string>(), "", "", "");
+            var inputs = new CheckoutInputs(5.0, 3.0, "", "", new Dictionary<string, string>(), "", "", "");
             var model = Model.FromJson(System.IO.File.ReadAllText("../../../../Departments.json"));
             var outputs = Checkout.Execute(new Dictionary<string, Model> { { "Departments", model } }, inputs);
             System.IO.File.WriteAllText("../../../../Checkout.json", outputs.model.ToJson());

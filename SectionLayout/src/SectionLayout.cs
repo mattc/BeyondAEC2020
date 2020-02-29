@@ -133,7 +133,7 @@ namespace SectionLayout
 
             AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model,circulationWidth, height);
 
-            var servicePerim = AddRoomFromCell(serviceAreaCell, "service", serviceMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(serviceAreaCell, "service", serviceMaterial, output.model, circulationWidth, height);
 
 
             AddRoomFromCell(produce1, "produce", produceMaterial, output.model, circulationWidth, height);
@@ -157,8 +157,7 @@ namespace SectionLayout
             var wallPt1 = servSep.PointAt(0);
             var wallPt4 = servSep.PointAt(1) + wallThickness;
             var wallProfile = Polygon.Rectangle(wallPt1,wallPt4);
-            //wallProfile.FitMost(envelope.Profile.Perimeter);
-            Shaper.FitWithin(wallProfile,envelope.Profile.Perimeter);
+            wallProfile = wallProfile.FitMost(envelope.Profile.Perimeter);
             var serviceWall = new Wall(wallProfile, 10);
             output.model.AddElement(serviceWall);
 
