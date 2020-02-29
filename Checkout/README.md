@@ -6,7 +6,8 @@ The Checkout function.
 
 |Input Name|Type|Description|
 |---|---|---|
-|Aisle Width|Range|The width.|
+|Checkout Stations|Range|The desired quantity of checkout stations.|
+|Aisle Width|Range|Width between checkout stations.|
 
 
 <br>

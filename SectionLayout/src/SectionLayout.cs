@@ -4,6 +4,7 @@ using Elements.Spatial;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using GeometryEx;
 
 
 namespace SectionLayout
@@ -51,8 +52,8 @@ namespace SectionLayout
 
             //Define Dimensions of non-prdoduct spaces
             var entryDepth = 5;
-            var checkoutDepth = 10;
-            var percentService = .2;
+            var checkoutDepth = entryDepth + 5;
+            var percentService = .25;
 
             //var buildingArea = envelope.Profile.Perimeter.Area();
 
@@ -80,8 +81,26 @@ namespace SectionLayout
             //Split into rooms front to back
             grid.V.SplitAtParameters(new[] {entryDepth/length, checkoutDepth/length, (1 - percentService)});
             
+
+            var mainEntryWidth = 10;
+            var secEntryWidth = 5;
+            var mainEntryPosition = .4;
+            var secEntryPosition = .8;
+
+            if (input.EntryRight)
+                {
+                    mainEntryPosition = 1- mainEntryPosition;
+                    secEntryPosition = 1 - secEntryPosition;
+                }
+                
+            var mainEntryLeft = mainEntryPosition - mainEntryWidth/2/length;
+            var mainEntryRight = mainEntryPosition + mainEntryWidth/2/length;
+            var secEntryLeft = secEntryPosition - secEntryWidth/2/length;
+            var secEntryRight = secEntryPosition + secEntryWidth/2/length;
+
+
             var entryArea = grid.GetCellAtIndices(0,0);
-            entryArea.U.SplitAtParameters(new[] {.2, .4, .6, .8});
+            entryArea.U.SplitAtParameters(new[] {mainEntryLeft, mainEntryRight, secEntryLeft, secEntryRight});
                 var front1 = entryArea.GetCellAtIndices(0,0);
                 var entry1 = entryArea.GetCellAtIndices(1,0);
                 var front2 = entryArea.GetCellAtIndices(2,0);
@@ -89,27 +108,26 @@ namespace SectionLayout
                 var front3 = entryArea.GetCellAtIndices(4,0);
             var checkoutArea = grid.GetCellAtIndices(0,1);
             var shelfArea = grid.GetCellAtIndices(0,2);
-
-            //Create wall between service space and rest of the building
-            var serviceArea = grid.GetCellAtIndices(0,3);
-            var wallThickness = new Vector3(0,.5,0);
-            var cellSeps = grid.GetCellSeparators(GridDirection.U);
-            var servSep = cellSeps[3];
-            var wallPt1 = servSep.PointAt(0);
-            var wallPt4 = servSep.PointAt(1) + wallThickness;
-            var wallProfile = Polygon.Rectangle(wallPt1,wallPt4);
-            var serviceWall = new Wall(wallProfile, 10);
-            output.model.AddElement(serviceWall);
+            var serviceAreaCell = grid.GetCellAtIndices(0,3);
             
             //Split Shelf Area into sub-rooms
             shelfArea.U.SplitAtParameters(new[] {percentLeft, percentGeneral});
                 var left = shelfArea.GetCellAtIndices(0,0);
                 left.V.SplitAtParameter(_leftSplit);
                     var produce = left.GetCellAtIndices(0,0);
+                    produce.U.SplitAtParameter(.5);
+                        var produce1 = produce.GetCellAtIndices(0,0);
+                        var produce2 = produce.GetCellAtIndices(1,0);
                     var prepared = left.GetCellAtIndices(0,1);
                 var general = shelfArea.GetCellAtIndices(1,0);
+                general.V.SplitAtParameter(.5);
+                    var general1 = general.GetCellAtIndices(0,0);
+                    var general2 = general.GetCellAtIndices(0,1);
                 var refrig = shelfArea.GetCellAtIndices(2,0);
-            
+                refrig.V.SplitAtParameter(.5);
+                    var refrig1 = refrig.GetCellAtIndices(0,0);
+                    var refrig2 = refrig.GetCellAtIndices(0,1);
+
             var entryMaterial = new Material("entry material",new Color(0,0,1,matAlpha));
             var frontMaterial = new Material("front material",new Color(.9,.7,.7,matAlpha));
             var checkoutMaterial = new Material("checkout material",new Color(0,.5,.5,matAlpha));
@@ -124,31 +142,49 @@ namespace SectionLayout
 
             //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
             //AddRoomFromCell(entryArea, "entry", entryMaterial, output.model, circulationWidth);
+
             AddRoomFromCell(front1, "front1", frontMaterial, output.model, circulationWidth, height);
             AddRoomFromCell(entry1, "entrance1", entryMaterial, output.model, circulationWidth, height);
             AddRoomFromCell(front2, "front2", frontMaterial, output.model, circulationWidth, height);
             AddRoomFromCell(entry2, "entrance2", entryMaterial, output.model, circulationWidth, height);
             AddRoomFromCell(front3, "front3", frontMaterial, output.model, circulationWidth, height);
-            
+
             AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model,circulationWidth, height);
-            AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model, circulationWidth, height);
 
-            AddRoomFromCell(produce, "produce", produceMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(serviceAreaCell, "service", serviceMaterial, output.model, circulationWidth, height);
+
+            AddRoomFromCell(produce1, "produce", produceMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(produce2, "produce", produceMaterial, output.model, circulationWidth, height);
+
             AddRoomFromCell(prepared, "prepared", preparedMaterial, output.model, circulationWidth, height);
-            AddRoomFromCell(general, "general", generalMaterial, output.model, circulationWidth, height);
-            AddRoomFromCell(refrig, "refrig", refrigMaterial, output.model, circulationWidth, height);
+            
+            AddRoomFromCell(general1, "general", generalMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(general2, "general", generalMaterial, output.model, circulationWidth, height);
+
+            AddRoomFromCell(refrig1, "refrig", refrigMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(refrig2, "refrig", refrigMaterial, output.model, circulationWidth, height);
+            
             
 
+            //Create wall between service space and rest of the building
+            var wallThickness = new Vector3(0,.5,0);
+            var cellSeps = serviceAreaCell.GetCellSeparators(GridDirection.U);
+            var servSep = cellSeps[0];
+            var wallPt1 = servSep.PointAt(0);
+            var wallPt4 = servSep.PointAt(1) + wallThickness;
+            var wallProfile = Polygon.Rectangle(wallPt1,wallPt4);
+            wallProfile = wallProfile.FitMost(envelope.Profile.Perimeter.Offset(-0.1).First());
+            var serviceWall = new Wall(wallProfile, height);
+            output.model.AddElement(serviceWall);
 
-            ////output.model.AddElement(rm);
             return output;
         }
 
-        private static void AddRoomFromCell (Grid2d cell, string department, Material material, Model model, double circulationWidth, double height)
+        private static Polygon AddRoomFromCell (Grid2d cell, string department, Material material, Model model, double circulationWidth, double height)
         {
             var polygons = cell.GetTrimmedCellGeometry();
             if (polygons.Count() == 0) {
-                return;
+                return null;
             }
             var polygon = (Polygon) polygons.First();
 
@@ -160,6 +196,7 @@ namespace SectionLayout
             var room = new Room((Polygon)newPolygon, Vector3.ZAxis, "Section 1", "100", department, "100", newPolygon.Area(), 
             1.0, 0, 0, 10, newPolygon.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
             model.AddElement(room);
+            return newPolygon;
         }
 
 

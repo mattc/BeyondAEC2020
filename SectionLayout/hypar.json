@@ -11,6 +11,11 @@
   "model_output": "Departments",
   "inputs": [
     {
+      "name": "Entry Right",
+      "description": "Main entry on the right or left side of the building",
+      "type": "boolean"
+    },
+    {
       "min": 0.0,
       "max": 100.0,
       "step": 1.0,
@@ -44,7 +49,7 @@
     },
     {
       "min": 0.0,
-      "max": 2,
+      "max": 4,
       "step": 0.1,
       "name": "Circulation Width",
       "description": "Amount of spacial offset to allow for circulation",

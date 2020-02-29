@@ -27,6 +27,22 @@
       "name": "Counter Depth",
       "description": "The depth (in).",
       "type": "range"
+    },
+    {
+      "min": 36.0,
+      "max": 144.0,
+      "step": 6.0,
+      "name": "Aisle Frontage",
+      "description": "The Space in front of prepared foods (in).",
+      "type": "range"
+    },
+    {
+      "min": 10.0,
+      "max": 80.0,
+      "step": 10.0,
+      "name": "Counter Radius Ratio",
+      "description": "The prepared foods counter ratio (%).",
+      "type": "range"
     }
   ],
   "outputs": [
