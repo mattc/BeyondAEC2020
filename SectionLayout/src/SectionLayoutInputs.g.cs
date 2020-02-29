@@ -17,18 +17,6 @@ namespace SectionLayout
     public class SectionLayoutInputs: S3Args
     {
 		/// <summary>
-		/// The length.
-		/// </summary>
-		[JsonProperty("Length")]
-		public double Length {get;}
-
-		/// <summary>
-		/// The width.
-		/// </summary>
-		[JsonProperty("Width")]
-		public double Width {get;}
-
-		/// <summary>
 		/// Percentage of space allocated to produce products
 		/// </summary>
 		[JsonProperty("Percent Produce")]
@@ -60,8 +48,6 @@ namespace SectionLayout
         /// </summary>
         public SectionLayoutInputs() : base()
         {
-			this.Length = 100;
-			this.Width = 100;
 			this.PercentProduce = 100;
 			this.PercentPrepared = 100;
 			this.PercentGeneral = 100;
@@ -75,10 +61,8 @@ namespace SectionLayout
         /// </summary>
         /// <returns></returns>
         [JsonConstructor]
-        public SectionLayoutInputs(double length, double width, double percentproduce, double percentprepared, double percentgeneral, double percentrefrigerated, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
+        public SectionLayoutInputs(double percentproduce, double percentprepared, double percentgeneral, double percentrefrigerated, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
         {
-			this.Length = length;
-			this.Width = width;
 			this.PercentProduce = percentproduce;
 			this.PercentPrepared = percentprepared;
 			this.PercentGeneral = percentgeneral;

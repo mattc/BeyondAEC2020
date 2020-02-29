@@ -17,11 +17,30 @@ namespace SectionLayout
         /// <returns>A SectionLayoutOutputs instance containing computed results and the model with any new elements.</returns>
         public static SectionLayoutOutputs Execute(Dictionary<string, Model> inputModels, SectionLayoutInputs input)
         {
-            /// Your code here.
-            var height = 10.0;
-            var volume = input.Length * input.Width * height;
-            var output = new SectionLayoutOutputs(volume);
-            var rectangle = Polygon.Rectangle(input.Length, input.Width);
+            Envelope envelope = null;
+            inputModels.TryGetValue("Envelope", out var model);
+            if (model != null)
+            {
+                var envelopes = new List<Envelope>();
+                envelopes.AddRange(model.AllElementsOfType<Envelope>());
+                var aboveGradeEnvelopes = envelopes.Where(e => e.Elevation >= 0.0).ToList();
+                if (aboveGradeEnvelopes.Count() > 0)
+                {
+                    envelope = aboveGradeEnvelopes.First();
+                }
+            }
+            if (envelope == null)
+            {
+                var envMatl = new Material("envelope", new Color(1.0, 1.0, 1.0, 0.2), 0.0f, 0.0f);
+                var height = 10.0;
+                var footprint = Polygon.Rectangle(60, 40);
+                var extrude = new Elements.Geometry.Solids.Extrude(footprint, height, Vector3.ZAxis, false);
+                var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude });
+                envelope = new Envelope(footprint, 0.0, height, Vector3.ZAxis, 0.0,
+                              new Transform(), envMatl, geomRep, false, System.Guid.NewGuid(), "");
+            }
+
+            var output = new SectionLayoutOutputs(10);
 
             //Define Dimensions of non-product spaces
             var entryDepth = 5;
@@ -38,17 +57,11 @@ namespace SectionLayout
             var percentProduce = _percentProduce / totalShelf;
             var percentGeneral = _percentGeneral / totalShelf;
             var percentRefrigerated = _percentRefrigerated / totalShelf;
-            
-            //Create room representing entire store
-            var material = new Material("office",Colors.Aqua);
-            var solid = new Elements.Geometry.Solids.Extrude(rectangle, height, Vector3.ZAxis, false);
-            var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>(){ solid});
-             Room rm = new Room(rectangle, Vector3.ZAxis, "Section 1", "100", "Grocery", "100", rectangle.Area(), 
-            1.0, 0, 0, height, rectangle.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
 
             //Split into rooms front to back
-            var grid = new Grid2d(rectangle);
-            grid.V.SplitAtParameters(new[] {entryDepth/input.Length, checkoutDepth/input.Length, (1 - serviceDepth/input.Length)});
+            var grid = new Grid2d(envelope.Profile.Perimeter);
+            var length = grid.V.Domain.Length;
+            grid.V.SplitAtParameters(new[] {entryDepth/length, checkoutDepth/length, (1 - serviceDepth/length)});
             
             var entryArea = grid.GetCellAtIndices(0,0);
             var checkoutArea = grid.GetCellAtIndices(0,1);
