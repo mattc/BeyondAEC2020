@@ -5,6 +5,7 @@
   "language": "C#",
   "name": "Section Layout",
   "repository_url": "https://github.com/hypar-io/function",
+  "model_output": "Departments",
   "inputs": [
     {
       "min": 1.0,
