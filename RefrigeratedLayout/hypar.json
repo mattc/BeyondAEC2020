@@ -3,7 +3,7 @@
   "description": "The RefrigeratedLayout function.",
   "id": "9cb7742d-0a28-483f-9433-78cef89462d1",
   "language": "C#",
-  "name": "RefrigeratedLayout",
+  "name": "Refrigerated Layout",
   "repository_url": "https://github.com/hypar-io/function",
   "model_dependencies": [
     {
@@ -13,19 +13,19 @@
   ],
   "inputs": [
     {
-      "min": 1.0,
-      "max": 4.0,
-      "step": 1.0,
+      "min": 36.0,
+      "max": 144.0,
+      "step": 3.0,
       "name": "Min Aisle Width",
-      "description": "The minimum width of an aisle",
+      "description": "The minimum width of an aisle (in)",
       "type": "range"
     },
     {
-      "min": 0.6,
-      "max": 0.76,
-      "step": 0.16,
+      "min": 24,
+      "max": 30,
+      "step": 6,
       "name": "Door Size",
-      "description": "The width of each fixture",
+      "description": "The width of each refrigerator unit",
       "type": "range"
     }
   ],

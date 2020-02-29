@@ -19,6 +19,11 @@ namespace RefrigeratedLayout
         {
           var output = new RefrigeratedLayoutOutputs();
 
+        // convert the inputs to meters
+        var doorSize = input.DoorSize / 39.37;
+        var minAisle = input.MinAisleWidth / 39.37;
+        
+
 
           Model model = null;
            IList<Room> rooms = null;
@@ -83,8 +88,8 @@ namespace RefrigeratedLayout
           // debug:
           System.Console.WriteLine("sideLength: " + sideLength + " available: " + available + " count: " + count);
 
-          grid.U.DivideByPattern( new double[]{ standardDepth, standardDepth, input.MinAisleWidth}, PatternMode.Cycle, FixedDivisionMode.RemainderAtEnd);
-          grid.V.DivideByFixedLength(input.DoorSize);
+          grid.U.DivideByPattern( new double[]{ standardDepth, standardDepth, minAisle}, PatternMode.Cycle, FixedDivisionMode.RemainderAtEnd);
+          grid.V.DivideByFixedLength(doorSize);
 
           // now we will try making the shelving
           for (int i=0; i<grid.U.Cells.Count;i++)

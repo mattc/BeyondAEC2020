@@ -17,13 +17,13 @@ namespace RefrigeratedLayout
     public class RefrigeratedLayoutInputs: S3Args
     {
 		/// <summary>
-		/// The minimum width of an aisle
+		/// The minimum width of an aisle (in)
 		/// </summary>
 		[JsonProperty("Min Aisle Width")]
 		public double MinAisleWidth {get;}
 
 		/// <summary>
-		/// The width of each fixture
+		/// The width of each refrigerator unit
 		/// </summary>
 		[JsonProperty("Door Size")]
 		public double DoorSize {get;}
@@ -36,8 +36,8 @@ namespace RefrigeratedLayout
         /// </summary>
         public RefrigeratedLayoutInputs() : base()
         {
-			this.MinAisleWidth = 4;
-			this.DoorSize = 0.76;
+			this.MinAisleWidth = 144;
+			this.DoorSize = 30;
 
         }
 

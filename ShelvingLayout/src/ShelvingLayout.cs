@@ -19,6 +19,13 @@ namespace ShelvingLayout
         {
           ShelvingLayoutOutputs output = new ShelvingLayoutOutputs();
 
+          // convert the inputs into meters
+          var fixtureHeight = input.FixtureHeight / 39.37; if (fixtureHeight==0) fixtureHeight = 1.0;
+          var fixtureWidth = input.FixtureWidth / 39.37;
+          var minAisleWidth = input.MinAisleWidth / 39.37;
+          var ShelvingDepth = input.ShelvingDepth / 39.37;
+
+
            Model model = null;
            IList<Room> rooms = null;
            if (inputModels.TryGetValue("Departments", out model))
@@ -74,13 +81,13 @@ namespace ShelvingLayout
 
           var sideLength = grid.U.Domain.Length; //grid.U.GetCellGeometry().Length();
 
-          double available = sideLength - (2.0 * input.ShelvingDepth);
-          int count = (int)(available / (2 * input.ShelvingDepth + input.MinAisleWidth));
+          double available = sideLength - (2.0 * ShelvingDepth);
+          int count = (int)(available / (2 * ShelvingDepth + minAisleWidth));
           // debug:
           System.Console.WriteLine("sideLength: " + sideLength + " available: " + available + " count: " + count);
 
-          grid.U.DivideByPattern( new double[]{ input.ShelvingDepth, input.ShelvingDepth, input.MinAisleWidth}, PatternMode.Cycle, FixedDivisionMode.RemainderAtEnd);
-          grid.V.DivideByFixedLength(input.FixtureWidth);
+          grid.U.DivideByPattern( new double[]{ ShelvingDepth, ShelvingDepth, minAisleWidth}, PatternMode.Cycle, FixedDivisionMode.RemainderAtEnd);
+          grid.V.DivideByFixedLength(fixtureWidth);
 
           // now we will try making the shelving
           for (int i=0; i<grid.U.Cells.Count;i++)
@@ -99,7 +106,8 @@ namespace ShelvingLayout
              else
              {
                
-              var shelfMass = new Mass((Polygon)cell.GetCellGeometry(), r.Height *0.75);
+               Material mat = new Material(Colors.Beige,0,0,Guid.NewGuid(), "Gondola");
+              var shelfMass = new Mass((Polygon)cell.GetCellGeometry(), fixtureHeight, mat);
               output.model.AddElement(shelfMass);
              }
             }
