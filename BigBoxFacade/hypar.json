@@ -1,0 +1,42 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "description": "The BigBoxFacade function.",
+  "id": "01b72d97-3970-4a0f-adfd-37f7c2f8d67c",
+  "language": "C#",
+  "model_dependencies": [
+    {"name": "Envelope"}
+  ],
+  "model_output": "Facade",
+  "name": "Big Box Facade",
+  "repository_url": "https://github.com/hypar-io/function",
+  "inputs": [
+    {
+      "min": 1.0,
+      "max": 10.0,
+      "step": 1.0,
+      "name": "Length",
+      "description": "The length.",
+      "type": "range"
+    },
+    {
+      "min": 1.0,
+      "max": 10.0,
+      "step": 1.0,
+      "name": "Width",
+      "description": "The width.",
+      "type": "range"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Volume",
+      "description": "The volume.",
+      "type": "number"
+    }
+  ],
+  "preview_image": null,
+  "element_types": [
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/Envelope.json",
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/FacadePanel.json"
+  ]
+}
