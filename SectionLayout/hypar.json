@@ -11,6 +11,11 @@
   "model_output": "Departments",
   "inputs": [
     {
+      "name": "Entry Right",
+      "description": "Main entry on the right or left side of the building",
+      "type": "boolean"
+    },
+    {
       "min": 0.0,
       "max": 100.0,
       "step": 1.0,
