@@ -49,13 +49,17 @@ namespace SectionLayout
 
             //Variables driving the division of the main shelf space
             var _percentProduce = input.PercentProduce;
+            var _percentPrepared = input.PercentPrepared;
             var _percentGeneral = input.PercentGeneral;
             var _percentRefrigerated = input.PercentRefrigerated;
 
-            var totalShelf = _percentProduce + _percentGeneral + _percentRefrigerated;
+            var _percentLeft = _percentProduce + _percentPrepared;
+            var _leftSplit = _percentProduce / (_percentProduce + _percentPrepared);
 
-            var percentProduce = _percentProduce / totalShelf;
-            var percentGeneral = _percentGeneral / totalShelf + percentProduce;
+            var totalShelf = _percentLeft + _percentGeneral + _percentRefrigerated;
+
+            var percentLeft = _percentLeft / totalShelf;
+            var percentGeneral = _percentGeneral / totalShelf + percentLeft;
             //var percentRefrigerated = _percentRefrigerated / totalShelf;
 
             //Split into rooms front to back
@@ -69,8 +73,11 @@ namespace SectionLayout
             var serviceArea = grid.GetCellAtIndices(0,3);
             
             //Split Shelf Area into sub-rooms
-            shelfArea.U.SplitAtParameters(new[] {percentProduce, percentGeneral});
-            var produce = shelfArea.GetCellAtIndices(0,0);
+            shelfArea.U.SplitAtParameters(new[] {percentLeft, percentGeneral});
+            var left = shelfArea.GetCellAtIndices(0,0);
+            left.V.SplitAtParameter(_leftSplit);
+            var produce = left.GetCellAtIndices(0,0);
+            var prepared = left.GetCellAtIndices(0,1);
             var general = shelfArea.GetCellAtIndices(1,0);
             var refrig = shelfArea.GetCellAtIndices(2,0);
             //var other = shelfArea.GetCellAtIndices(3,0);
@@ -83,6 +90,7 @@ namespace SectionLayout
             var serviceMaterial = new Material("service material",new Color(.25,.25,.25,.9));
 
             var produceMaterial = new Material("produce material",new Color(0,1,0,.9));
+            var preparedMaterial = new Material("prepared material",new Color(1,.25,.25,.9));
             var generalMaterial = new Material("general material",new Color(1,0,0,.9));
             var refrigMaterial = new Material("refrigerated material",new Color(.75,.75,1,.9));
             var otherMaterial = new Material("other material",new Color(0,0,0,.9));
@@ -95,6 +103,7 @@ namespace SectionLayout
             output.model.AddElement(GetRoomFromCell(serviceArea, "service", serviceMaterial));
 
             output.model.AddElement(GetRoomFromCell(produce, "produce", produceMaterial));
+            output.model.AddElement(GetRoomFromCell(prepared, "prepared", preparedMaterial));
             output.model.AddElement(GetRoomFromCell(general, "general", generalMaterial));
             output.model.AddElement(GetRoomFromCell(refrig, "refrig", refrigMaterial));
             
