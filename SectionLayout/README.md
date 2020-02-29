@@ -11,6 +11,7 @@ The SectionLayout function.
 |Percent General|Range|Percentage of space allocated to general products|
 |Percent Refrigerated|Range|Percentage of space allocated to refrigerated products|
 |Circulation Width|Range|Amount of spacial offset to allow for circulation|
+|Transparency|Range|Model transparency|
 
 
 <br>
