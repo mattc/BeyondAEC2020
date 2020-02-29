@@ -20,6 +20,7 @@ namespace SectionLayout
         {
             Envelope envelope = null;
             inputModels.TryGetValue("Envelope", out var model);
+            var height = 0.0;
             if (model != null)
             {
                 var envelopes = new List<Envelope>();
@@ -28,12 +29,13 @@ namespace SectionLayout
                 if (aboveGradeEnvelopes.Count() > 0)
                 {
                     envelope = aboveGradeEnvelopes.First();
+                    height = envelope.Height - 1.0;
                 }
             }
             if (envelope == null)
             {
                 var envMatl = new Material("envelope", new Color(1.0, 1.0, 1.0, 0.2), 0.0f, 0.0f);
-                var height = 10.0;
+                height = 10.0;
                 var footprint = Polygon.Rectangle(60, 40);
                 var extrude = new Elements.Geometry.Solids.Extrude(footprint, height, Vector3.ZAxis, false);
                 var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>() { extrude });
@@ -131,24 +133,21 @@ namespace SectionLayout
 
             //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
             //AddRoomFromCell(entryArea, "entry", entryMaterial, output.model, circulationWidth);
-            AddRoomFromCell(front1, "front", frontMaterial, output.model, circulationWidth);
-            AddRoomFromCell(entry1, "entrance1", entryMaterial, output.model, circulationWidth);
-            AddRoomFromCell(front2, "front", frontMaterial, output.model, circulationWidth);
-            AddRoomFromCell(entry2, "entrance2", entryMaterial, output.model, circulationWidth);
-            AddRoomFromCell(front3, "front", frontMaterial, output.model, circulationWidth);
-            
-            AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model,circulationWidth);
-            AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model, circulationWidth);
 
-            AddRoomFromCell(produce1, "produce", produceMaterial, output.model, circulationWidth);
-            AddRoomFromCell(produce2, "produce", produceMaterial, output.model, circulationWidth);
-            AddRoomFromCell(prepared, "prepared", preparedMaterial, output.model, circulationWidth);
+            AddRoomFromCell(front1, "front1", frontMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(entry1, "entrance1", entryMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(front2, "front2", frontMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(entry2, "entrance2", entryMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(front3, "front3", frontMaterial, output.model, circulationWidth, height);
 
-            AddRoomFromCell(general1, "general", generalMaterial, output.model, circulationWidth);
-            AddRoomFromCell(general2, "general", generalMaterial, output.model, circulationWidth);
+            AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model,circulationWidth, height);
+            AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model, circulationWidth, height);
 
-            AddRoomFromCell(refrig1, "refrig", refrigMaterial, output.model, circulationWidth);
-            AddRoomFromCell(refrig2, "refrig", refrigMaterial, output.model, circulationWidth);
+
+            AddRoomFromCell(produce, "produce", produceMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(prepared, "prepared", preparedMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(general, "general", generalMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(refrig, "refrig", refrigMaterial, output.model, circulationWidth, height);
             
 
 
@@ -156,7 +155,7 @@ namespace SectionLayout
             return output;
         }
 
-        private static void AddRoomFromCell (Grid2d cell, string department, Material material, Model model, double circulationWidth)
+        private static void AddRoomFromCell (Grid2d cell, string department, Material material, Model model, double circulationWidth, double height)
         {
             var polygons = cell.GetTrimmedCellGeometry();
             if (polygons.Count() == 0) {
@@ -167,7 +166,7 @@ namespace SectionLayout
             var newPoints = polygon.Vertices.ToList().ToArray().Shrink(circulationWidth);
             var newPolygon = new Polygon(newPoints);
 
-            var solid = new Elements.Geometry.Solids.Extrude(newPolygon, 11, Vector3.ZAxis, false);
+            var solid = new Elements.Geometry.Solids.Extrude(newPolygon, height, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>(){ solid});
             var room = new Room((Polygon)newPolygon, Vector3.ZAxis, "Section 1", "100", department, "100", newPolygon.Area(), 
             1.0, 0, 0, 10, newPolygon.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );

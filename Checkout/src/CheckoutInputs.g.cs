@@ -30,7 +30,7 @@ namespace Checkout
         /// </summary>
         public CheckoutInputs() : base()
         {
-			this.AisleWidth = 2;
+			this.AisleWidth = 5;
 
         }
 

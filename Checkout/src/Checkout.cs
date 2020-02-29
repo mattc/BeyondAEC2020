@@ -18,7 +18,7 @@ namespace Checkout
         public static CheckoutOutputs Execute(Dictionary<string, Model> inputModels, CheckoutInputs input)
         {
             var rooms = new List<Room>();
-            inputModels.TryGetValue("departments", out var model);
+            inputModels.TryGetValue("Departments", out var model);
             if (model == null)
             {
                 throw new ArgumentException("No Departments found.");
@@ -61,8 +61,8 @@ namespace Checkout
 
         private static List<Register> MakeCounter(bool full = true)
         {
-            var cash = new Material("cash", Palette.Yellow, 0.0f, 0.0f);
-            var conveyer = new Material("conveyor", Palette.Orange, 0.0f, 0.0f);
+            var cash = new Material("cash", Colors.Yellow, 0.0f, 0.0f);
+            var conveyer = new Material("conveyor", Colors.Orange, 0.0f, 0.0f);
             var counter = new List<Register>
             {
                 new Register
