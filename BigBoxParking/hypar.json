@@ -1,0 +1,25 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "description": "The BigBoxParking function.",
+  "id": "775c195e-8050-40c2-9488-5c5f50861911",
+  "language": "C#",
+  "name": "Big Box Parking",
+  "repository_url": "https://github.com/hypar-io/function",
+  "inputs": [
+    {
+      "name": "Boundary",
+      "description": "The outline of the parking lot.",
+      "type": "geometry",
+      "primitive_type": "polygon"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Volume",
+      "description": "The volume.",
+      "type": "number"
+    }
+  ],
+  "preview_image": null,
+  "element_types": null
+}
