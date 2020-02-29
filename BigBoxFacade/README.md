@@ -6,8 +6,7 @@ The BigBoxFacade function.
 
 |Input Name|Type|Description|
 |---|---|---|
-|Length|Range|The length.|
-|Width|Range|The width.|
+|Entrance on right|Boolean|Whether to put the primary entrance on the right side of the building.|
 
 
 <br>

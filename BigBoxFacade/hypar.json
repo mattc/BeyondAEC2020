@@ -11,20 +11,9 @@
   "repository_url": "https://github.com/hypar-io/function",
   "inputs": [
     {
-      "min": 1.0,
-      "max": 10.0,
-      "step": 1.0,
-      "name": "Length",
-      "description": "The length.",
-      "type": "range"
-    },
-    {
-      "min": 1.0,
-      "max": 10.0,
-      "step": 1.0,
-      "name": "Width",
-      "description": "The width.",
-      "type": "range"
+      "name": "Entrance on right",
+      "description": "Whether to put the primary entrance on the right side of the building.",
+      "type": "boolean"
     }
   ],
   "outputs": [

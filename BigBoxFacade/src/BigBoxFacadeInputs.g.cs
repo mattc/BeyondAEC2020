@@ -17,16 +17,10 @@ namespace BigBoxFacade
     public class BigBoxFacadeInputs: S3Args
     {
 		/// <summary>
-		/// The length.
+		/// Whether to put the primary entrance on the right side of the building.
 		/// </summary>
-		[JsonProperty("Length")]
-		public double Length {get;}
-
-		/// <summary>
-		/// The width.
-		/// </summary>
-		[JsonProperty("Width")]
-		public double Width {get;}
+		[JsonProperty("Entrance on right")]
+		public bool EntranceOnRight {get;}
 
 
         
@@ -36,8 +30,7 @@ namespace BigBoxFacade
         /// </summary>
         public BigBoxFacadeInputs() : base()
         {
-			this.Length = 10;
-			this.Width = 10;
+			this.EntranceOnRight = false;
 
         }
 
@@ -47,10 +40,9 @@ namespace BigBoxFacade
         /// </summary>
         /// <returns></returns>
         [JsonConstructor]
-        public BigBoxFacadeInputs(double length, double width, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
+        public BigBoxFacadeInputs(bool entranceonright, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
         {
-			this.Length = length;
-			this.Width = width;
+			this.EntranceOnRight = entranceonright;
 
 		}
 

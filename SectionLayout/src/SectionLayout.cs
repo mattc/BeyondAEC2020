@@ -89,7 +89,17 @@ namespace SectionLayout
                 var front3 = entryArea.GetCellAtIndices(4,0);
             var checkoutArea = grid.GetCellAtIndices(0,1);
             var shelfArea = grid.GetCellAtIndices(0,2);
+
+            //Create wall between service space and rest of the building
             var serviceArea = grid.GetCellAtIndices(0,3);
+            var wallThickness = new Vector3(0,.5,0);
+            var cellSeps = grid.GetCellSeparators(GridDirection.U);
+            var servSep = cellSeps[3];
+            var wallPt1 = servSep.PointAt(0);
+            var wallPt4 = servSep.PointAt(1) + wallThickness;
+            var wallProfile = Polygon.Rectangle(wallPt1,wallPt4);
+            var serviceWall = new Wall(wallProfile, 10);
+            output.model.AddElement(serviceWall);
             
             //Split Shelf Area into sub-rooms
             shelfArea.U.SplitAtParameters(new[] {percentLeft, percentGeneral});
@@ -99,10 +109,6 @@ namespace SectionLayout
                     var prepared = left.GetCellAtIndices(0,1);
                 var general = shelfArea.GetCellAtIndices(1,0);
                 var refrig = shelfArea.GetCellAtIndices(2,0);
-            //var other = shelfArea.GetCellAtIndices(3,0);
-
-            //var rooms = grid.GetCells().Select(c => GetRoomFromCell(c));
-            //output.model.AddElements(rooms);
             
             var entryMaterial = new Material("entry material",new Color(0,0,1,matAlpha));
             var frontMaterial = new Material("front material",new Color(.9,.7,.7,matAlpha));
@@ -152,7 +158,7 @@ namespace SectionLayout
             var solid = new Elements.Geometry.Solids.Extrude(newPolygon, height, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>(){ solid});
             var room = new Room((Polygon)newPolygon, Vector3.ZAxis, "Section 1", "100", department, "100", newPolygon.Area(), 
-            1.0, 0, 0, 11, newPolygon.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
+            1.0, 0, 0, 10, newPolygon.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
             model.AddElement(room);
         }
 
