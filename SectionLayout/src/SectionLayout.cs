@@ -36,8 +36,8 @@ namespace SectionLayout
             var totalShelf = _percentProduce + _percentGeneral + _percentRefrigerated;
 
             var percentProduce = _percentProduce / totalShelf;
-            var percentGeneral = _percentGeneral / totalShelf;
-            var percentRefrigerated = _percentRefrigerated / totalShelf;
+            var percentGeneral = _percentGeneral / totalShelf + percentProduce;
+            //var percentRefrigerated = _percentRefrigerated / totalShelf;
             
             //Create room representing entire store
             var material = new Material("office",Colors.Aqua);
