@@ -3,6 +3,7 @@ using Elements.Geometry;
 using Elements.Spatial;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 
 namespace SectionLayout
@@ -53,6 +54,8 @@ namespace SectionLayout
 
             //var buildingArea = envelope.Profile.Perimeter.Area();
 
+            var circulationWidth = input.CirculationWidth;
+            
             //Variables driving the division of the main shelf space
             var _percentProduce = input.PercentProduce;
             var _percentPrepared = input.PercentPrepared;
@@ -102,31 +105,39 @@ namespace SectionLayout
 
 
             //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
-            AddRoomFromCell(entryArea, "entry", entryMaterial, output.model);
-            AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model);
-            AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model);
+            AddRoomFromCell(entryArea, "entry", entryMaterial, output.model, circulationWidth);
+            AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model,circulationWidth);
+            AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model, circulationWidth);
 
-            AddRoomFromCell(produce, "produce", produceMaterial, output.model);
-             AddRoomFromCell(prepared, "prepared", preparedMaterial, output.model);
-            AddRoomFromCell(general, "general", generalMaterial, output.model);
-            AddRoomFromCell(refrig, "refrig", refrigMaterial, output.model);
+            AddRoomFromCell(produce, "produce", produceMaterial, output.model, circulationWidth);
+            AddRoomFromCell(prepared, "prepared", preparedMaterial, output.model, circulationWidth);
+            AddRoomFromCell(general, "general", generalMaterial, output.model, circulationWidth);
+            AddRoomFromCell(refrig, "refrig", refrigMaterial, output.model, circulationWidth);
             
+
+
             ////output.model.AddElement(rm);
             return output;
         }
 
-        private static void AddRoomFromCell (Grid2d cell, string department, Material material, Model model)
+        private static void AddRoomFromCell (Grid2d cell, string department, Material material, Model model, double circulationWidth)
         {
             var polygons = cell.GetTrimmedCellGeometry();
             if (polygons.Count() == 0) {
                 return;
             }
             var polygon = (Polygon) polygons.First();
-            var solid = new Elements.Geometry.Solids.Extrude(polygon, 11, Vector3.ZAxis, false);
+
+            var newPoints = polygon.Vertices.ToList().ToArray().Shrink(circulationWidth);
+            var newPolygon = new Polygon(newPoints);
+
+            var solid = new Elements.Geometry.Solids.Extrude(newPolygon, 11, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>(){ solid});
-            var room = new Room((Polygon)polygon, Vector3.ZAxis, "Section 1", "100", department, "100", polygon.Area(), 
-            1.0, 0, 0, 11, polygon.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
+            var room = new Room((Polygon)newPolygon, Vector3.ZAxis, "Section 1", "100", department, "100", newPolygon.Area(), 
+            1.0, 0, 0, 11, newPolygon.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
             model.AddElement(room);
         }
+
+
       }
 }

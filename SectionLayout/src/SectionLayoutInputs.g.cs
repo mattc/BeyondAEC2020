@@ -40,6 +40,12 @@ namespace SectionLayout
 		[JsonProperty("Percent Refrigerated")]
 		public double PercentRefrigerated {get;}
 
+		/// <summary>
+		/// Amount of spacial offset to allow for circulation
+		/// </summary>
+		[JsonProperty("Circulation Width")]
+		public double CirculationWidth {get;}
+
 
         
         /// <summary>
@@ -52,6 +58,7 @@ namespace SectionLayout
 			this.PercentPrepared = 100;
 			this.PercentGeneral = 100;
 			this.PercentRefrigerated = 100;
+			this.CirculationWidth = 2;
 
         }
 
@@ -61,12 +68,13 @@ namespace SectionLayout
         /// </summary>
         /// <returns></returns>
         [JsonConstructor]
-        public SectionLayoutInputs(double percentproduce, double percentprepared, double percentgeneral, double percentrefrigerated, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
+        public SectionLayoutInputs(double percentproduce, double percentprepared, double percentgeneral, double percentrefrigerated, double circulationwidth, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
         {
 			this.PercentProduce = percentproduce;
 			this.PercentPrepared = percentprepared;
 			this.PercentGeneral = percentgeneral;
 			this.PercentRefrigerated = percentrefrigerated;
+			this.CirculationWidth = circulationwidth;
 
 		}
 
