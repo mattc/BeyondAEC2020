@@ -42,10 +42,16 @@ namespace SectionLayout
 
             var output = new SectionLayoutOutputs(10);
 
-            //Define Dimensions of non-product spaces
+            var grid = new Grid2d(envelope.Profile.Perimeter);
+            var length = grid.V.Domain.Length;
+            var width = grid.U.Domain.Length;
+
+            //Define Dimensions of non-prdoduct spaces
             var entryDepth = 5;
             var checkoutDepth = 10;
-            var serviceDepth = 10;
+            var percentService = .2;
+
+            //var buildingArea = envelope.Profile.Perimeter.Area();
 
             //Variables driving the division of the main shelf space
             var _percentProduce = input.PercentProduce;
@@ -61,11 +67,10 @@ namespace SectionLayout
             var percentLeft = _percentLeft / totalShelf;
             var percentGeneral = _percentGeneral / totalShelf + percentLeft;
             //var percentRefrigerated = _percentRefrigerated / totalShelf;
+            
 
             //Split into rooms front to back
-            var grid = new Grid2d(envelope.Profile.Perimeter);
-            var length = grid.V.Domain.Length;
-            grid.V.SplitAtParameters(new[] {entryDepth/length, checkoutDepth/length, (1 - serviceDepth/length)});
+            grid.V.SplitAtParameters(new[] {entryDepth/length, checkoutDepth/length, (1 - percentService)});
             
             var entryArea = grid.GetCellAtIndices(0,0);
             var checkoutArea = grid.GetCellAtIndices(0,1);
