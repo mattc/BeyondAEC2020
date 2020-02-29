@@ -60,28 +60,39 @@ namespace SectionLayout
             var produce = shelfArea.GetCellAtIndices(0,0);
             var general = shelfArea.GetCellAtIndices(1,0);
             var refrig = shelfArea.GetCellAtIndices(2,0);
+            //var other = shelfArea.GetCellAtIndices(3,0);
 
             //var rooms = grid.GetCells().Select(c => GetRoomFromCell(c));
             //output.model.AddElements(rooms);
             
-            //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
-            output.model.AddElement(GetRoomFromCell(entryArea, "entry"));
-            output.model.AddElement(GetRoomFromCell(checkoutArea, "checkout"));
-            ////output.model.AddElement(GetRoomFromCell(shelfArea, "shelf"));
-            output.model.AddElement(GetRoomFromCell(serviceArea, "service"));
+            var entryMaterial = new Material("entry material",new Color(0,0,1,.9));
+            var checkoutMaterial = new Material("checkout material",new Color(0,.5,.5,.9));
+            var serviceMaterial = new Material("service material",new Color(.25,.25,.25,.9));
 
-            output.model.AddElement(GetRoomFromCell(produce, "produce"));
-            output.model.AddElement(GetRoomFromCell(general, "general"));
-            output.model.AddElement(GetRoomFromCell(refrig, "refrig"));
+            var produceMaterial = new Material("produce material",new Color(0,1,0,.9));
+            var generalMaterial = new Material("general material",new Color(1,0,0,.9));
+            var refrigMaterial = new Material("refrigerated material",new Color(.75,.75,1,.9));
+            var otherMaterial = new Material("other material",new Color(0,0,0,.9));
+
+
+            //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
+            output.model.AddElement(GetRoomFromCell(entryArea, "entry", entryMaterial));
+            output.model.AddElement(GetRoomFromCell(checkoutArea, "checkout", checkoutMaterial));
+            ////output.model.AddElement(GetRoomFromCell(shelfArea, "shelf"));
+            output.model.AddElement(GetRoomFromCell(serviceArea, "service", serviceMaterial));
+
+            output.model.AddElement(GetRoomFromCell(produce, "produce", produceMaterial));
+            output.model.AddElement(GetRoomFromCell(general, "general", generalMaterial));
+            output.model.AddElement(GetRoomFromCell(refrig, "refrig", refrigMaterial));
             
             ////output.model.AddElement(rm);
             return output;
         }
 
-        private static Element GetRoomFromCell (Grid2d cell, string department)
+        private static Element GetRoomFromCell (Grid2d cell, string department, Material material)
         {
             var polygon = (Polygon)cell.GetCellGeometry();
-            var material = new Material("office",new Color(1,0,0,.9));
+            //var material = new Material("office",new Color(1,0,0,.9));
             var solid = new Elements.Geometry.Solids.Extrude(polygon, 11, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>(){ solid});
             var room = new Room((Polygon)polygon, Vector3.ZAxis, "Section 1", "100", department, "100", polygon.Area(), 
