@@ -58,10 +58,31 @@ namespace BigBoxFacade
                     {
                         var grid = new Grid1d(s);
                         var doorWidth = 4;
-                        var firstDoor = l / 10 * 4;
-                        var secondDoor = l / 10 * 8;
-                        grid.SplitAtPositions(new []{firstDoor - doorWidth, firstDoor + doorWidth, secondDoor - doorWidth / 2, secondDoor + doorWidth / 2});
+                        var backwardsLine = s.Start.X > s.End.X;
+                        var reverseDirection = backwardsLine != input.EntranceOnRight;
+        
+                        var leftDoor = 0.0;
+                        var rightDoor = 0.0;
+                        var leftDoorWidth = 0.0;
+                        var rightDoorWidth = 0.9;
+                        if (reverseDirection) {
+                            leftDoor = l / 10 * 2;
+                            rightDoor = l / 10 * 6;
+                            leftDoorWidth = doorWidth;
+                            rightDoorWidth = doorWidth * 2.0;
+                        }
+                        else
+                        {
+                            leftDoor = l / 10 * 4;
+                            rightDoor = l / 10 * 8;
+                            leftDoorWidth = doorWidth * 2.0;
+                            rightDoorWidth = doorWidth;
+                        }
+                        grid.SplitAtPositions(new []{leftDoor - leftDoorWidth / 2.0, leftDoor + leftDoorWidth / 2.0, rightDoor - rightDoorWidth / 2.0, rightDoor + rightDoorWidth / 2.0});
                         var lines = grid.GetCells().Select(c => c.GetCellGeometry()).OfType<Line>();
+                        if (reverseDirection) {
+                            lines = lines.Reverse();
+                        }
                         var wallIdx = 0;
                         foreach (var wallLine in lines)
                         {
