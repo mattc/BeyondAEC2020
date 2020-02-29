@@ -89,28 +89,30 @@ namespace SectionLayout
 
 
             //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
-            output.model.AddElement(GetRoomFromCell(entryArea, "entry", entryMaterial));
-            output.model.AddElement(GetRoomFromCell(checkoutArea, "checkout", checkoutMaterial));
-            ////output.model.AddElement(GetRoomFromCell(shelfArea, "shelf"));
-            output.model.AddElement(GetRoomFromCell(serviceArea, "service", serviceMaterial));
+            AddRoomFromCell(entryArea, "entry", entryMaterial, output.model);
+            AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model);
+            AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model);
 
-            output.model.AddElement(GetRoomFromCell(produce, "produce", produceMaterial));
-            output.model.AddElement(GetRoomFromCell(general, "general", generalMaterial));
-            output.model.AddElement(GetRoomFromCell(refrig, "refrig", refrigMaterial));
+            AddRoomFromCell(produce, "produce", produceMaterial, output.model);
+            AddRoomFromCell(general, "general", generalMaterial, output.model);
+            AddRoomFromCell(refrig, "refrig", refrigMaterial, output.model);
             
             ////output.model.AddElement(rm);
             return output;
         }
 
-        private static Element GetRoomFromCell (Grid2d cell, string department, Material material)
+        private static void AddRoomFromCell (Grid2d cell, string department, Material material, Model model)
         {
-            var polygon = (Polygon)cell.GetCellGeometry();
-            //var material = new Material("office",new Color(1,0,0,.9));
+            var polygons = cell.GetTrimmedCellGeometry();
+            if (polygons.Count() == 0) {
+                return;
+            }
+            var polygon = (Polygon) polygons.First();
             var solid = new Elements.Geometry.Solids.Extrude(polygon, 11, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>(){ solid});
             var room = new Room((Polygon)polygon, Vector3.ZAxis, "Section 1", "100", department, "100", polygon.Area(), 
             1.0, 0, 0, 11, polygon.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
-            return room;
+            model.AddElement(room);
         }
       }
 }
