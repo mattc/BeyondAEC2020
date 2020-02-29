@@ -1,0 +1,37 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "description": "The ProduceLayout function.",
+  "id": "705b8b13-80d2-41d2-a236-1981b3841a11",
+  "language": "C#",
+  "name": "Produce Layout",
+  "repository_url": "https://github.com/hypar-io/function",
+  "model_dependencies": [
+    {
+      "name": "Departments",
+      "optional": false
+    }
+  ],
+  "inputs": [
+    {
+      "min": 36.0,
+      "max": 144.0,
+      "step": 3.0,
+      "name": "Min Aisle Width",
+      "description": "The minimum width of an aisle (in)",
+      "type": "range"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Linear Feet",
+      "description": "The linear feet of produce",
+      "type": "number"
+    }
+  ],
+  "preview_image": null,
+  "element_types": [
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/Envelope.json",
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/Room.json",
+
+  ]
+}

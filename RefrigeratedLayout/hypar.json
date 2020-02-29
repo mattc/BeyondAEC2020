@@ -1,0 +1,41 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "description": "The RefrigeratedLayout function.",
+  "id": "9cb7742d-0a28-483f-9433-78cef89462d1",
+  "language": "C#",
+  "name": "Refrigerated Layout",
+  "repository_url": "https://github.com/hypar-io/function",
+  "model_dependencies": [
+    {
+      "name": "Departments",
+      "optional": false
+    }
+  ],
+  "inputs": [
+    {
+      "min": 36.0,
+      "max": 144.0,
+      "step": 3.0,
+      "name": "Min Aisle Width",
+      "description": "The minimum width of an aisle (in)",
+      "type": "range"
+    },
+    {
+      "min": 24,
+      "max": 30,
+      "step": 6,
+      "name": "Door Size",
+      "description": "The width of each refrigerator unit",
+      "type": "range"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Linear Feet",
+      "description": "The number of doors",
+      "type": "number"
+    }
+  ],
+  "preview_image": null,
+  "element_types": ["https://raw.githubusercontent.com/hypar-io/Schemas/master/Room.json"]
+}

@@ -41,6 +41,22 @@
       "name": "Percent Refrigerated",
       "description": "Percentage of space allocated to refrigerated products",
       "type": "range"
+    },
+    {
+      "min": 0.0,
+      "max": 2,
+      "step": 0.1,
+      "name": "Circulation Width",
+      "description": "Amount of spacial offset to allow for circulation",
+      "type": "range"
+    },
+    {
+      "min": 0.0,
+      "max": 1.0,
+      "step": 0.01,
+      "name": "Transparency",
+      "description": "Model transparency",
+      "type": "range"
     }
   ],
   "outputs": [
