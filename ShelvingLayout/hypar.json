@@ -1,0 +1,41 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "description": "The ShelvingLayout function.",
+  "id": "8de0f323-2443-4127-b20c-c1c0159242e2",
+  "language": "C#",
+  "name": "Shelving Layout",
+  "repository_url": "https://github.com/hypar-io/function",
+  "inputs": [    
+    {
+      "min": 0.3,
+      "max": 1.5,
+      "step": 0.1,
+      "name": "Shelving Depth",
+      "description": "The depth of one side of a shelving unit",
+      "type": "range"
+    },
+    {
+      "min": 1.0,
+      "max": 4.0,
+      "step": 1.0,
+      "name": "Min Aisle Width",
+      "description": "The minimum width of an aisle",
+      "type": "range"
+    },
+    {
+      "min": 0.6,
+      "max": 1.2,
+      "step": 0.2,
+      "name": "Fixture Width",
+      "description": "The width of each fixture",
+      "type": "range"
+    }
+
+
+  ],
+  "outputs": [
+    
+  ],
+  "preview_image": null,
+  "element_types": ["https://raw.githubusercontent.com/hypar-io/Schemas/master/Room.json"]
+}
