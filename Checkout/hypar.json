@@ -1,0 +1,30 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "description": "The Checkout function.",
+  "id": "7ffb5e27-037d-492a-b60d-6978b7123c9e",
+  "language": "C#",
+  "name": "Checkout",
+  "repository_url": "https://github.com/hypar-io/function",
+  "inputs": [
+    {
+      "min": 1.0,
+      "max": 2.0,
+      "step": 0.1,
+      "name": "Aisle Width",
+      "description": "The width.",
+      "type": "range"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Checkouts",
+      "description": "Checkout quantity.",
+      "type": "number"
+    }
+  ],
+  "preview_image": null,
+  "element_types":
+  [
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/Room.json"
+  ]
+}

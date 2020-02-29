@@ -57,6 +57,9 @@ namespace SectionLayout
             var circulationWidth = input.CirculationWidth;
             
             //Variables driving the division of the main shelf space
+            
+            var matAlpha = input.Transparency;
+            if (matAlpha > 1){ matAlpha = 1;}
             var _percentProduce = input.PercentProduce;
             var _percentPrepared = input.PercentPrepared;
             var _percentGeneral = input.PercentGeneral;
@@ -99,16 +102,16 @@ namespace SectionLayout
             //var rooms = grid.GetCells().Select(c => GetRoomFromCell(c));
             //output.model.AddElements(rooms);
             
-            var entryMaterial = new Material("entry material",new Color(0,0,1,.9));
-            var frontMaterial = new Material("front material",new Color(.9,.7,.7,.9));
-            var checkoutMaterial = new Material("checkout material",new Color(0,.5,.5,.9));
-            var serviceMaterial = new Material("service material",new Color(.25,.25,.25,.9));
+            var entryMaterial = new Material("entry material",new Color(0,0,1,matAlpha));
+            var frontMaterial = new Material("front material",new Color(.9,.7,.7,matAlpha));
+            var checkoutMaterial = new Material("checkout material",new Color(0,.5,.5,matAlpha));
+            var serviceMaterial = new Material("service material",new Color(.25,.25,.25,matAlpha));
 
-            var produceMaterial = new Material("produce material",new Color(0,1,0,.9));
-            var preparedMaterial = new Material("prepared material",new Color(1,.25,.25,.9));
-            var generalMaterial = new Material("general material",new Color(1,0,0,.9));
-            var refrigMaterial = new Material("refrigerated material",new Color(.75,.75,1,.9));
-            var otherMaterial = new Material("other material",new Color(0,0,0,.9));
+            var produceMaterial = new Material("produce material",new Color(0,1,0,matAlpha));
+            var preparedMaterial = new Material("prepared material",new Color(1,.25,.25,matAlpha));
+            var generalMaterial = new Material("general material",new Color(1,0,0,matAlpha));
+            var refrigMaterial = new Material("refrigerated material",new Color(.75,.75,1,matAlpha));
+            var otherMaterial = new Material("other material",new Color(0,0,0,matAlpha));
 
 
             //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
