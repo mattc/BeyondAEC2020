@@ -81,8 +81,26 @@ namespace SectionLayout
             //Split into rooms front to back
             grid.V.SplitAtParameters(new[] {entryDepth/length, checkoutDepth/length, (1 - percentService)});
             
+
+            var mainEntryWidth = 10;
+            var secEntryWidth = 5;
+            var mainEntryPosition = .4;
+            var secEntryPosition = .8;
+
+            if (input.EntryRight)
+                {
+                    mainEntryPosition = 1- mainEntryPosition;
+                    secEntryPosition = 1 - secEntryPosition;
+                }
+                
+            var mainEntryLeft = mainEntryPosition - mainEntryWidth/2/length;
+            var mainEntryRight = mainEntryPosition + mainEntryWidth/2/length;
+            var secEntryLeft = secEntryPosition - secEntryWidth/2/length;
+            var secEntryRight = secEntryPosition + secEntryWidth/2/length;
+
+
             var entryArea = grid.GetCellAtIndices(0,0);
-            entryArea.U.SplitAtParameters(new[] {.2, .4, .6, .8});
+            entryArea.U.SplitAtParameters(new[] {mainEntryLeft, mainEntryRight, secEntryLeft, secEntryRight});
                 var front1 = entryArea.GetCellAtIndices(0,0);
                 var entry1 = entryArea.GetCellAtIndices(1,0);
                 var front2 = entryArea.GetCellAtIndices(2,0);
@@ -135,7 +153,6 @@ namespace SectionLayout
 
             AddRoomFromCell(serviceAreaCell, "service", serviceMaterial, output.model, circulationWidth, height);
 
-
             AddRoomFromCell(produce1, "produce", produceMaterial, output.model, circulationWidth, height);
             AddRoomFromCell(produce2, "produce", produceMaterial, output.model, circulationWidth, height);
 
@@ -150,18 +167,16 @@ namespace SectionLayout
             
 
             //Create wall between service space and rest of the building
-            //var serviceArea = serviceAreaCell.GetCellSeparators(GridDirection.U);
             var wallThickness = new Vector3(0,.5,0);
             var cellSeps = serviceAreaCell.GetCellSeparators(GridDirection.U);
             var servSep = cellSeps[0];
             var wallPt1 = servSep.PointAt(0);
             var wallPt4 = servSep.PointAt(1) + wallThickness;
             var wallProfile = Polygon.Rectangle(wallPt1,wallPt4);
-            wallProfile = wallProfile.FitMost(envelope.Profile.Perimeter);
-            var serviceWall = new Wall(wallProfile, 10);
+            wallProfile = wallProfile.FitMost(envelope.Profile.Perimeter.Offset(-0.1).First());
+            var serviceWall = new Wall(wallProfile, height);
             output.model.AddElement(serviceWall);
 
-            ////output.model.AddElement(rm);
             return output;
         }
 

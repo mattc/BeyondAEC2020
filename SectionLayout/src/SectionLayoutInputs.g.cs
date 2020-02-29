@@ -17,6 +17,12 @@ namespace SectionLayout
     public class SectionLayoutInputs: S3Args
     {
 		/// <summary>
+		/// Main entry on the right or left side of the building
+		/// </summary>
+		[JsonProperty("Entry Right")]
+		public bool EntryRight {get;}
+
+		/// <summary>
 		/// Percentage of space allocated to produce products
 		/// </summary>
 		[JsonProperty("Percent Produce")]
@@ -60,6 +66,7 @@ namespace SectionLayout
         /// </summary>
         public SectionLayoutInputs() : base()
         {
+			this.EntryRight = false;
 			this.PercentProduce = 100;
 			this.PercentPrepared = 100;
 			this.PercentGeneral = 100;
@@ -75,8 +82,9 @@ namespace SectionLayout
         /// </summary>
         /// <returns></returns>
         [JsonConstructor]
-        public SectionLayoutInputs(double percentproduce, double percentprepared, double percentgeneral, double percentrefrigerated, double circulationwidth, double transparency, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
+        public SectionLayoutInputs(bool entryright, double percentproduce, double percentprepared, double percentgeneral, double percentrefrigerated, double circulationwidth, double transparency, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
         {
+			this.EntryRight = entryright;
 			this.PercentProduce = percentproduce;
 			this.PercentPrepared = percentprepared;
 			this.PercentGeneral = percentgeneral;

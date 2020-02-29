@@ -10,7 +10,7 @@ namespace SectionLayout.Tests
         [Fact]
         public void SectionLayoutTest()
         {
-            var inputs = new SectionLayoutInputs(20.0, 20.0, 20.0, 20.0, 2.0, 0.5, "", "", new Dictionary<string, string>(), "", "", "");
+            var inputs = new SectionLayoutInputs(true, 20.0, 20.0, 20.0, 20.0, 2.0, 0.5, "", "", new Dictionary<string, string>(), "", "", "");
             var model = Model.FromJson(System.IO.File.ReadAllText("../../../../Envelope.json"));
             var outputs = SectionLayout.Execute(new Dictionary<string, Model> { { "Envelope", model } }, inputs);
             System.IO.File.WriteAllText("../../../../SectionLayout.json", outputs.model.ToJson());
