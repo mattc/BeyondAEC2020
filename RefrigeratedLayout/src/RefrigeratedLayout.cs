@@ -1,40 +1,40 @@
 using System;
-using Elements;
-using Elements.Geometry;
-using Elements.Spatial;
-using System.Collections.Generic;
 using System.Linq;
+using Elements;
+using Elements.Spatial;
+using Elements.Geometry;
+using System.Collections.Generic;
 
-namespace ShelvingLayout
+namespace RefrigeratedLayout
 {
-      public static class ShelvingLayout
+      public static class RefrigeratedLayout
     {
         /// <summary>
-        /// The ShelvingLayout function.
+        /// The RefrigeratedLayout function.
         /// </summary>
         /// <param name="model">The input model.</param>
         /// <param name="input">The arguments to the execution.</param>
-        /// <returns>A ShelvingLayoutOutputs instance containing computed results and the model with any new elements.</returns>
-        public static ShelvingLayoutOutputs Execute(Dictionary<string, Model> inputModels, ShelvingLayoutInputs input)
+        /// <returns>A RefrigeratedLayoutOutputs instance containing computed results and the model with any new elements.</returns>
+        public static RefrigeratedLayoutOutputs Execute(Dictionary<string, Model> inputModels, RefrigeratedLayoutInputs input)
         {
-          ShelvingLayoutOutputs output = new ShelvingLayoutOutputs();
+          var output = new RefrigeratedLayoutOutputs();
 
-          // convert the inputs into meters
-          var fixtureHeight = input.FixtureHeight / 39.37; if (fixtureHeight==0) fixtureHeight = 1.0;
-          var fixtureWidth = input.FixtureWidth / 39.37;
-          var minAisleWidth = input.MinAisleWidth / 39.37;
-          var ShelvingDepth = input.ShelvingDepth / 39.37;
+        // convert the inputs to meters
+        var doorSize = input.DoorSize / 39.37;
+        var minAisle = input.MinAisleWidth / 39.37;
+        
 
 
-           Model model = null;
+          Model model = null;
            IList<Room> rooms = null;
+           // we want Departments as inputs!
            if (inputModels.TryGetValue("Departments", out model))
            {
               rooms = model.AllElementsOfType<Room>().ToList();
            }
            else
            {
-            throw new ApplicationException("Need Departments as input!");
+            //throw new ApplicationException("Need Departments as input!");
             model = new Model();
             // default:
             double inputLength = 100;
@@ -49,7 +49,7 @@ namespace ShelvingLayout
 
             var solid = new Elements.Geometry.Solids.Extrude(rectangle, inputHeight, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>(){ solid});
-             Room r = new Room(rectangle, Vector3.ZAxis, "Section 1", "100", "general", "100", rectangle.Area(), 
+             Room r = new Room(rectangle, Vector3.ZAxis, "Section 1", "100", "refrig", "100", rectangle.Area(), 
                           1.0, 0, 0, inputHeight, rectangle.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
             
             model.AddElement(r);
@@ -62,9 +62,9 @@ namespace ShelvingLayout
           // this function only deals with certain departments.
 
         var appropriateRooms = 
-          rooms.Where( r => r.Department == "general");
+          rooms.Where( r => r.Department == "refrig");
 
-        if (appropriateRooms.Count()==0) throw new ApplicationException("This function works only on rooms with 'general' department");
+        if (appropriateRooms.Count()==0) throw new ApplicationException("This function works only on rooms with 'refrig' department");
 
 
         foreach( var r in appropriateRooms)
@@ -81,13 +81,15 @@ namespace ShelvingLayout
 
           var sideLength = grid.U.Domain.Length; //grid.U.GetCellGeometry().Length();
 
-          double available = sideLength - (2.0 * ShelvingDepth);
-          int count = (int)(available / (2 * ShelvingDepth + minAisleWidth));
+          var standardDepth = 0.889; // 35.5"
+
+          double available = sideLength - (2.0 * standardDepth);
+          int count = (int)(available / (2 * standardDepth + input.MinAisleWidth));
           // debug:
           System.Console.WriteLine("sideLength: " + sideLength + " available: " + available + " count: " + count);
 
-          grid.U.DivideByPattern( new double[]{ ShelvingDepth, ShelvingDepth, minAisleWidth}, PatternMode.Cycle, FixedDivisionMode.RemainderAtEnd);
-          grid.V.DivideByFixedLength(fixtureWidth);
+          grid.U.DivideByPattern( new double[]{ standardDepth, standardDepth, minAisle}, PatternMode.Cycle, FixedDivisionMode.RemainderAtEnd);
+          grid.V.DivideByFixedLength(doorSize);
 
           // now we will try making the shelving
           for (int i=0; i<grid.U.Cells.Count;i++)
@@ -105,17 +107,19 @@ namespace ShelvingLayout
              }
              else
              {
-               
-               Material mat = new Material(Colors.Beige,0,0,Guid.NewGuid(), "Gondola");
-              var shelfMass = new Mass((Polygon)cell.GetCellGeometry(), fixtureHeight, mat);
+               var height = 2.0;
+               var material = new Material(Colors.Gray, 0, 0, Guid.NewGuid(),"Refrigerator");
+              var shelfMass = new Mass((Polygon)cell.GetCellGeometry(), height, material);
               output.model.AddElement(shelfMass);
              }
             }
 
           }                      
-        } 
-
-            return output;
         }
+
+        return output; 
+        }
+
+        
       }
 }

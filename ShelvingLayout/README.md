@@ -6,9 +6,10 @@ The ShelvingLayout function.
 
 |Input Name|Type|Description|
 |---|---|---|
-|Shelving Depth|Range|The depth of one side of a shelving unit|
-|Min Aisle Width|Range|The minimum width of an aisle|
-|Fixture Width|Range|The width of each fixture|
+|Shelving Depth|Range|The depth of one side of a shelving unit (in)|
+|Min Aisle Width|Range|The minimum width of an aisle (inch)|
+|Fixture Width|Range|The width of each fixture (in)|
+|Fixture Height|Range|The height of each gondola fixture (in)|
 
 
 <br>
