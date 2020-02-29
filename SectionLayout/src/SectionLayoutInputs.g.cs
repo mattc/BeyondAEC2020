@@ -64,7 +64,7 @@ namespace SectionLayout
 			this.PercentPrepared = 100;
 			this.PercentGeneral = 100;
 			this.PercentRefrigerated = 100;
-			this.CirculationWidth = 2;
+			this.CirculationWidth = 4;
 			this.Transparency = 1;
 
         }

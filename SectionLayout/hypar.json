@@ -44,7 +44,7 @@
     },
     {
       "min": 0.0,
-      "max": 2,
+      "max": 4,
       "step": 0.1,
       "name": "Circulation Width",
       "description": "Amount of spacial offset to allow for circulation",

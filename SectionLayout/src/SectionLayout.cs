@@ -4,6 +4,7 @@ using Elements.Spatial;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using GeometryEx;
 
 
 namespace SectionLayout
@@ -51,8 +52,8 @@ namespace SectionLayout
 
             //Define Dimensions of non-prdoduct spaces
             var entryDepth = 5;
-            var checkoutDepth = 10;
-            var percentService = .2;
+            var checkoutDepth = entryDepth + 5;
+            var percentService = .25;
 
             //var buildingArea = envelope.Profile.Perimeter.Area();
 
@@ -89,17 +90,7 @@ namespace SectionLayout
                 var front3 = entryArea.GetCellAtIndices(4,0);
             var checkoutArea = grid.GetCellAtIndices(0,1);
             var shelfArea = grid.GetCellAtIndices(0,2);
-
-            //Create wall between service space and rest of the building
-            var serviceArea = grid.GetCellAtIndices(0,3);
-            var wallThickness = new Vector3(0,.5,0);
-            var cellSeps = grid.GetCellSeparators(GridDirection.U);
-            var servSep = cellSeps[3];
-            var wallPt1 = servSep.PointAt(0);
-            var wallPt4 = servSep.PointAt(1) + wallThickness;
-            var wallProfile = Polygon.Rectangle(wallPt1,wallPt4);
-            var serviceWall = new Wall(wallProfile, 10);
-            output.model.AddElement(serviceWall);
+            var serviceAreaCell = grid.GetCellAtIndices(0,3);
             
             //Split Shelf Area into sub-rooms
             shelfArea.U.SplitAtParameters(new[] {percentLeft, percentGeneral});
@@ -141,7 +132,8 @@ namespace SectionLayout
             AddRoomFromCell(front3, "front3", frontMaterial, output.model, circulationWidth, height);
 
             AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model,circulationWidth, height);
-            AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model, circulationWidth, height);
+
+            var servicePerim = AddRoomFromCell(serviceAreaCell, "service", serviceMaterial, output.model, circulationWidth, height);
 
 
             AddRoomFromCell(produce1, "produce", produceMaterial, output.model, circulationWidth, height);
@@ -155,17 +147,30 @@ namespace SectionLayout
             AddRoomFromCell(refrig1, "refrig", refrigMaterial, output.model, circulationWidth, height);
             AddRoomFromCell(refrig2, "refrig", refrigMaterial, output.model, circulationWidth, height);
             
+            
 
+            //Create wall between service space and rest of the building
+            //var serviceArea = serviceAreaCell.GetCellSeparators(GridDirection.U);
+            var wallThickness = new Vector3(0,.5,0);
+            var cellSeps = serviceAreaCell.GetCellSeparators(GridDirection.U);
+            var servSep = cellSeps[0];
+            var wallPt1 = servSep.PointAt(0);
+            var wallPt4 = servSep.PointAt(1) + wallThickness;
+            var wallProfile = Polygon.Rectangle(wallPt1,wallPt4);
+            //wallProfile.FitMost(envelope.Profile.Perimeter);
+            Shaper.FitWithin(wallProfile,envelope.Profile.Perimeter);
+            var serviceWall = new Wall(wallProfile, 10);
+            output.model.AddElement(serviceWall);
 
             ////output.model.AddElement(rm);
             return output;
         }
 
-        private static void AddRoomFromCell (Grid2d cell, string department, Material material, Model model, double circulationWidth, double height)
+        private static Polygon AddRoomFromCell (Grid2d cell, string department, Material material, Model model, double circulationWidth, double height)
         {
             var polygons = cell.GetTrimmedCellGeometry();
             if (polygons.Count() == 0) {
-                return;
+                return null;
             }
             var polygon = (Polygon) polygons.First();
 
@@ -177,6 +182,7 @@ namespace SectionLayout
             var room = new Room((Polygon)newPolygon, Vector3.ZAxis, "Section 1", "100", department, "100", newPolygon.Area(), 
             1.0, 0, 0, 10, newPolygon.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
             model.AddElement(room);
+            return newPolygon;
         }
 
 
