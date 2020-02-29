@@ -1,0 +1,67 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "description": "The SectionLayout function.",
+  "id": "cb15944d-584b-4d93-82e7-bbeb6153a6aa",
+  "language": "C#",
+  "name": "Section Layout",
+  "repository_url": "https://github.com/hypar-io/function",
+  "inputs": [
+    {
+      "min": 1.0,
+      "max": 100.0,
+      "step": 1.0,
+      "name": "Length",
+      "description": "The length.",
+      "type": "range"
+    },
+    {
+      "min": 1.0,
+      "max": 100.0,
+      "step": 1.0,
+      "name": "Width",
+      "description": "The width.",
+      "type": "range"
+    },
+    {
+      "min": 0.0,
+      "max": 100.0,
+      "step": 1.0,
+      "name": "Percent Produce",
+      "description": "Percentage of space allocated to produce products",
+      "type": "range"
+    },
+    {
+      "min": 0.0,
+      "max": 100.0,
+      "step": 1.0,
+      "name": "Percent Prepared",
+      "description": "Percentage of space allocated to prepared products",
+      "type": "range"
+    },
+    {
+      "min": 0.0,
+      "max": 100.0,
+      "step": 1.0,
+      "name": "Percent General",
+      "description": "Percentage of space allocated to general products",
+      "type": "range"
+    },
+    {
+      "min": 0.0,
+      "max": 100.0,
+      "step": 1.0,
+      "name": "Percent Refrigerated",
+      "description": "Percentage of space allocated to refrigerated products",
+      "type": "range"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Volume",
+      "description": "The volume.",
+      "type": "number"
+    }
+  ],
+  "preview_image": null,
+  "element_types": ["https://raw.githubusercontent.com/hypar-io/Schemas/master/Room.json"]
+}
