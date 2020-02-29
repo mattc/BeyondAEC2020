@@ -16,26 +16,48 @@ namespace ShelvingLayout
         /// <returns>A ShelvingLayoutOutputs instance containing computed results and the model with any new elements.</returns>
         public static ShelvingLayoutOutputs Execute(Dictionary<string, Model> inputModels, ShelvingLayoutInputs input)
         {
-            /// Your code here.
-           
-           
-            var volume = input.Length * input.Width * input.Height;
-            var output = new ShelvingLayoutOutputs(volume);
-            var rectangle = Polygon.Rectangle(input.Length, input.Width);
-            var mass = new Mass(rectangle, input.Height);
+          ShelvingLayoutOutputs output = new ShelvingLayoutOutputs();
+
+           Model model = null;
+           IList<Room> rooms = null;
+           if (inputModels.TryGetValue("departments", out model))
+           {
+              rooms = model.AllElementsOfType<Room>().ToList();
+           }
+           else
+           {
+            model = new Model();
+            // default:
+            double inputLength = 50;
+            double inputWidth = 30;
+            double inputHeight = 5;
+            
+            var rectangle = Polygon.Rectangle(inputLength, inputWidth);
+            var mass = new Mass(rectangle, inputHeight);
             output.model.AddElement(mass);
             var material = new Material("office",new Color(0,0,1.0, 0.5) );
             
 
-            var solid = new Elements.Geometry.Solids.Extrude(rectangle, input.Height, Vector3.ZAxis, false);
+            var solid = new Elements.Geometry.Solids.Extrude(rectangle, inputHeight, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>(){ solid});
-             Room r = new Room(rectangle, Vector3.ZAxis, "Section 1", "100", "Grocery", "100", rectangle.Area(), 
-                          1.0, 0, 0, input.Height, rectangle.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
-            output.model.AddElement(r);
+             Room r = new Room(rectangle, Vector3.ZAxis, "Section 1", "100", "general", "100", rectangle.Area(), 
+                          1.0, 0, 0, inputHeight, rectangle.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
+            
+            model.AddElement(r);
+            rooms = new List<Room>();
+            rooms.Add(r);
+           }
 
 // ok, now the real work begins... from the room
 
+          // this function only deals with certain departments.
 
+        var appropriateRooms = 
+          rooms.Where( r => r.Department == "general");
+
+
+        foreach( var r in appropriateRooms)
+        {
 
           // make a 2D grid
           var grid = new Elements.Spatial.Grid2d( r.Perimeter, new Transform());
@@ -50,13 +72,18 @@ namespace ShelvingLayout
 
           double available = sideLength - (2.0 * input.ShelvingDepth);
           int count = (int)(available / (2 * input.ShelvingDepth + input.MinAisleWidth));
+          // debug:
+          System.Console.WriteLine("sideLength: " + sideLength + " available: " + available + " count: " + count);
 
           grid.U.DivideByPattern( new double[]{ input.ShelvingDepth, input.ShelvingDepth, input.MinAisleWidth}, PatternMode.Cycle, FixedDivisionMode.RemainderAtEnd);
+          grid.V.DivideByFixedLength(input.FixtureWidth);
 
           // now we will try making the shelving
           for (int i=0; i<grid.U.Cells.Count;i++)
           {
-            var cell = grid.GetCellAtIndices(i,0);
+            for (int j=0;j<grid.V.Cells.Count;j++)
+            {
+            var cell = grid.GetCellAtIndices(i,j);
              // make a poly from each gridcell
              // shelf, shelf, aisle
              int c = i+1;
@@ -68,12 +95,13 @@ namespace ShelvingLayout
              else
              {
                
-              var shelfMass = new Mass((Polygon)cell.GetCellGeometry(), input.Height *0.75);
+              var shelfMass = new Mass((Polygon)cell.GetCellGeometry(), r.Height *0.75);
               output.model.AddElement(shelfMass);
              }
+            }
 
           }                      
-          
+        } 
 
             return output;
         }

@@ -17,24 +17,6 @@ namespace ShelvingLayout
     public class ShelvingLayoutInputs: S3Args
     {
 		/// <summary>
-		/// The length.
-		/// </summary>
-		[JsonProperty("Length")]
-		public double Length {get;}
-
-		/// <summary>
-		/// The width.
-		/// </summary>
-		[JsonProperty("Width")]
-		public double Width {get;}
-
-		/// <summary>
-		/// The height.
-		/// </summary>
-		[JsonProperty("Height")]
-		public double Height {get;}
-
-		/// <summary>
 		/// The depth of one side of a shelving unit
 		/// </summary>
 		[JsonProperty("Shelving Depth")]
@@ -46,6 +28,12 @@ namespace ShelvingLayout
 		[JsonProperty("Min Aisle Width")]
 		public double MinAisleWidth {get;}
 
+		/// <summary>
+		/// The width of each fixture
+		/// </summary>
+		[JsonProperty("Fixture Width")]
+		public double FixtureWidth {get;}
+
 
         
         /// <summary>
@@ -54,11 +42,9 @@ namespace ShelvingLayout
         /// </summary>
         public ShelvingLayoutInputs() : base()
         {
-			this.Length = 100;
-			this.Width = 100;
-			this.Height = 10;
 			this.ShelvingDepth = 1.5;
 			this.MinAisleWidth = 4;
+			this.FixtureWidth = 1.2;
 
         }
 
@@ -68,13 +54,11 @@ namespace ShelvingLayout
         /// </summary>
         /// <returns></returns>
         [JsonConstructor]
-        public ShelvingLayoutInputs(double length, double width, double height, double shelvingdepth, double minaislewidth, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
+        public ShelvingLayoutInputs(double shelvingdepth, double minaislewidth, double fixturewidth, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
         {
-			this.Length = length;
-			this.Width = width;
-			this.Height = height;
 			this.ShelvingDepth = shelvingdepth;
 			this.MinAisleWidth = minaislewidth;
+			this.FixtureWidth = fixturewidth;
 
 		}
 

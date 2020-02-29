@@ -16,12 +16,6 @@ namespace ShelvingLayout
 {
     public class ShelvingLayoutOutputs: ResultsBase
     {
-		/// <summary>
-		/// The volume.
-		/// </summary>
-		[JsonProperty("Volume")]
-		public double Volume {get;}
-
 
         
         /// <summary>
@@ -34,21 +28,5 @@ namespace ShelvingLayout
         }
 
 
-        /// <summary>
-        /// Construct a ShelvingLayoutOutputs specifying all inputs.
-        /// </summary>
-        /// <returns></returns>
-        [JsonConstructor]
-        public ShelvingLayoutOutputs(double volume): base()
-        {
-			this.Volume = volume;
-
-		}
-
-		public override string ToString()
-		{
-			var json = JsonConvert.SerializeObject(this);
-			return json;
-		}
 	}
 }
