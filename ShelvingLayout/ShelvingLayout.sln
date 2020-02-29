@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelvingLayout", "src\ShelvingLayout.csproj", "{7F0248BC-4F53-479E-B289-D3109913C467}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShelvingLayout", "src\ShelvingLayout.csproj", "{7F0248BC-4F53-479E-B289-D3109913C467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelvingLayout.Dependencies", "dependencies\ShelvingLayout.Dependencies.csproj", "{AE0E0DAC-E40A-4F61-94AC-9BFA2539F3C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShelvingLayout.Dependencies", "dependencies\ShelvingLayout.Dependencies.csproj", "{AE0E0DAC-E40A-4F61-94AC-9BFA2539F3C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShelvingLayout.tests", "test\ShelvingLayout.tests.csproj", "{50300595-F1A6-4175-8AEC-409F590D1F0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShelvingLayout.tests", "test\ShelvingLayout.tests.csproj", "{50300595-F1A6-4175-8AEC-409F590D1F0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,9 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{7F0248BC-4F53-479E-B289-D3109913C467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -58,5 +55,11 @@ Global
 		{50300595-F1A6-4175-8AEC-409F590D1F0E}.Release|x64.Build.0 = Release|Any CPU
 		{50300595-F1A6-4175-8AEC-409F590D1F0E}.Release|x86.ActiveCfg = Release|Any CPU
 		{50300595-F1A6-4175-8AEC-409F590D1F0E}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {25DE5656-5AC0-4364-B30F-C96FCACCC60F}
 	EndGlobalSection
 EndGlobal

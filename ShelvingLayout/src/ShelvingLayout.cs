@@ -1,3 +1,4 @@
+using System;
 using Elements;
 using Elements.Geometry;
 using Elements.Spatial;
@@ -20,15 +21,16 @@ namespace ShelvingLayout
 
            Model model = null;
            IList<Room> rooms = null;
-           if (inputModels.TryGetValue("departments", out model))
+           if (inputModels.TryGetValue("Departments", out model))
            {
               rooms = model.AllElementsOfType<Room>().ToList();
            }
            else
            {
+            throw new ApplicationException("Need Departments as input!");
             model = new Model();
             // default:
-            double inputLength = 50;
+            double inputLength = 100;
             double inputWidth = 30;
             double inputHeight = 5;
             
@@ -54,6 +56,8 @@ namespace ShelvingLayout
 
         var appropriateRooms = 
           rooms.Where( r => r.Department == "general");
+
+        if (appropriateRooms.Count()==0) throw new ApplicationException("This function works only on rooms with 'general' department");
 
 
         foreach( var r in appropriateRooms)
