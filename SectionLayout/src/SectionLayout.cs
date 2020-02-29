@@ -49,13 +49,17 @@ namespace SectionLayout
 
             //Variables driving the division of the main shelf space
             var _percentProduce = input.PercentProduce;
+            var _percentPrepared = input.PercentPrepared;
             var _percentGeneral = input.PercentGeneral;
             var _percentRefrigerated = input.PercentRefrigerated;
 
-            var totalShelf = _percentProduce + _percentGeneral + _percentRefrigerated;
+            var _percentLeft = _percentProduce + _percentPrepared;
+            var _leftSplit = _percentProduce / (_percentProduce + _percentPrepared);
 
-            var percentProduce = _percentProduce / totalShelf;
-            var percentGeneral = _percentGeneral / totalShelf + percentProduce;
+            var totalShelf = _percentLeft + _percentGeneral + _percentRefrigerated;
+
+            var percentLeft = _percentLeft / totalShelf;
+            var percentGeneral = _percentGeneral / totalShelf + percentLeft;
             //var percentRefrigerated = _percentRefrigerated / totalShelf;
 
             //Split into rooms front to back
@@ -69,8 +73,11 @@ namespace SectionLayout
             var serviceArea = grid.GetCellAtIndices(0,3);
             
             //Split Shelf Area into sub-rooms
-            shelfArea.U.SplitAtParameters(new[] {percentProduce, percentGeneral});
-            var produce = shelfArea.GetCellAtIndices(0,0);
+            shelfArea.U.SplitAtParameters(new[] {percentLeft, percentGeneral});
+            var left = shelfArea.GetCellAtIndices(0,0);
+            left.V.SplitAtParameter(_leftSplit);
+            var produce = left.GetCellAtIndices(0,0);
+            var prepared = left.GetCellAtIndices(0,1);
             var general = shelfArea.GetCellAtIndices(1,0);
             var refrig = shelfArea.GetCellAtIndices(2,0);
             //var other = shelfArea.GetCellAtIndices(3,0);
@@ -83,34 +90,38 @@ namespace SectionLayout
             var serviceMaterial = new Material("service material",new Color(.25,.25,.25,.9));
 
             var produceMaterial = new Material("produce material",new Color(0,1,0,.9));
+            var preparedMaterial = new Material("prepared material",new Color(1,.25,.25,.9));
             var generalMaterial = new Material("general material",new Color(1,0,0,.9));
             var refrigMaterial = new Material("refrigerated material",new Color(.75,.75,1,.9));
             var otherMaterial = new Material("other material",new Color(0,0,0,.9));
 
 
             //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
-            output.model.AddElement(GetRoomFromCell(entryArea, "entry", entryMaterial));
-            output.model.AddElement(GetRoomFromCell(checkoutArea, "checkout", checkoutMaterial));
-            ////output.model.AddElement(GetRoomFromCell(shelfArea, "shelf"));
-            output.model.AddElement(GetRoomFromCell(serviceArea, "service", serviceMaterial));
+            AddRoomFromCell(entryArea, "entry", entryMaterial, output.model);
+            AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model);
+            AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model);
 
-            output.model.AddElement(GetRoomFromCell(produce, "produce", produceMaterial));
-            output.model.AddElement(GetRoomFromCell(general, "general", generalMaterial));
-            output.model.AddElement(GetRoomFromCell(refrig, "refrig", refrigMaterial));
+            AddRoomFromCell(produce, "produce", produceMaterial, output.model);
+             AddRoomFromCell(prepared, "prepared", preparedMaterial, output.model);
+            AddRoomFromCell(general, "general", generalMaterial, output.model);
+            AddRoomFromCell(refrig, "refrig", refrigMaterial, output.model);
             
             ////output.model.AddElement(rm);
             return output;
         }
 
-        private static Element GetRoomFromCell (Grid2d cell, string department, Material material)
+        private static void AddRoomFromCell (Grid2d cell, string department, Material material, Model model)
         {
-            var polygon = (Polygon)cell.GetCellGeometry();
-            //var material = new Material("office",new Color(1,0,0,.9));
+            var polygons = cell.GetTrimmedCellGeometry();
+            if (polygons.Count() == 0) {
+                return;
+            }
+            var polygon = (Polygon) polygons.First();
             var solid = new Elements.Geometry.Solids.Extrude(polygon, 11, Vector3.ZAxis, false);
             var geomRep = new Representation(new List<Elements.Geometry.Solids.SolidOperation>(){ solid});
             var room = new Room((Polygon)polygon, Vector3.ZAxis, "Section 1", "100", department, "100", polygon.Area(), 
             1.0, 0, 0, 11, polygon.Area(), new Transform(), material, geomRep, false, System.Guid.NewGuid(), "Section 1" );
-            return room;
+            model.AddElement(room);
         }
       }
 }
