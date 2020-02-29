@@ -31,7 +31,7 @@
   "preview_image": null,
   "element_types": [
     "https://raw.githubusercontent.com/hypar-io/Schemas/master/Envelope.json",
-    "https://raw.githubusercontent.com/hypar-io/Schemas/master/Room.json",
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/Room.json"
 
   ]
 }

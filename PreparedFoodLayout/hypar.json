@@ -1,0 +1,43 @@
+{
+  "$schema": "https://hypar.io/Schemas/Function.json",
+  "description": "The PreparedFoodLayout function.",
+  "id": "89a146b2-a081-47e6-9172-ba403e1e0df9",
+  "language": "C#",
+  "name": "Prepared Food Layout",
+  "repository_url": "https://github.com/hypar-io/function",
+  "model_dependencies": [
+    {
+      "name": "Departments",
+      "optional": false
+    }
+  ],
+  "inputs": [
+    {
+      "min": 30.0,
+      "max": 35.0,
+      "step": 1.0,
+      "name": "Counter Height",
+      "description": "Counter Height (in).",
+      "type": "range"
+    },
+    {
+      "min": 24.0,
+      "max": 48.0,
+      "step": 6.0,
+      "name": "Counter Depth",
+      "description": "The depth (in).",
+      "type": "range"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "Linear Feet",
+      "description": "The linear feet of prepared foods",
+      "type": "number"
+    }
+  ],
+  "preview_image": null,
+  "element_types": [
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/Envelope.json",
+    "https://raw.githubusercontent.com/hypar-io/Schemas/master/Room.json"]
+}
