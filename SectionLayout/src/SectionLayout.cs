@@ -76,24 +76,31 @@ namespace SectionLayout
             grid.V.SplitAtParameters(new[] {entryDepth/length, checkoutDepth/length, (1 - percentService)});
             
             var entryArea = grid.GetCellAtIndices(0,0);
+            entryArea.U.SplitAtParameters(new[] {.2, .4, .6, .8});
+                var front1 = entryArea.GetCellAtIndices(0,0);
+                var entry1 = entryArea.GetCellAtIndices(1,0);
+                var front2 = entryArea.GetCellAtIndices(2,0);
+                var entry2 = entryArea.GetCellAtIndices(3,0);
+                var front3 = entryArea.GetCellAtIndices(4,0);
             var checkoutArea = grid.GetCellAtIndices(0,1);
             var shelfArea = grid.GetCellAtIndices(0,2);
             var serviceArea = grid.GetCellAtIndices(0,3);
             
             //Split Shelf Area into sub-rooms
             shelfArea.U.SplitAtParameters(new[] {percentLeft, percentGeneral});
-            var left = shelfArea.GetCellAtIndices(0,0);
-            left.V.SplitAtParameter(_leftSplit);
-            var produce = left.GetCellAtIndices(0,0);
-            var prepared = left.GetCellAtIndices(0,1);
-            var general = shelfArea.GetCellAtIndices(1,0);
-            var refrig = shelfArea.GetCellAtIndices(2,0);
+                var left = shelfArea.GetCellAtIndices(0,0);
+                left.V.SplitAtParameter(_leftSplit);
+                    var produce = left.GetCellAtIndices(0,0);
+                    var prepared = left.GetCellAtIndices(0,1);
+                var general = shelfArea.GetCellAtIndices(1,0);
+                var refrig = shelfArea.GetCellAtIndices(2,0);
             //var other = shelfArea.GetCellAtIndices(3,0);
 
             //var rooms = grid.GetCells().Select(c => GetRoomFromCell(c));
             //output.model.AddElements(rooms);
             
             var entryMaterial = new Material("entry material",new Color(0,0,1,.9));
+            var frontMaterial = new Material("front material",new Color(.9,.7,.7,.9));
             var checkoutMaterial = new Material("checkout material",new Color(0,.5,.5,.9));
             var serviceMaterial = new Material("service material",new Color(.25,.25,.25,.9));
 
@@ -105,7 +112,13 @@ namespace SectionLayout
 
 
             //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
-            AddRoomFromCell(entryArea, "entry", entryMaterial, output.model, circulationWidth);
+            //AddRoomFromCell(entryArea, "entry", entryMaterial, output.model, circulationWidth);
+            AddRoomFromCell(front1, "front1", frontMaterial, output.model, circulationWidth);
+            AddRoomFromCell(entry1, "entrance1", entryMaterial, output.model, circulationWidth);
+            AddRoomFromCell(front2, "front2", frontMaterial, output.model, circulationWidth);
+            AddRoomFromCell(entry2, "entrance2", entryMaterial, output.model, circulationWidth);
+            AddRoomFromCell(front3, "front3", frontMaterial, output.model, circulationWidth);
+            
             AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model,circulationWidth);
             AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model, circulationWidth);
 
