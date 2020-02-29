@@ -104,10 +104,19 @@ namespace SectionLayout
                 var left = shelfArea.GetCellAtIndices(0,0);
                 left.V.SplitAtParameter(_leftSplit);
                     var produce = left.GetCellAtIndices(0,0);
+                    produce.U.SplitAtParameter(.5);
+                        var produce1 = produce.GetCellAtIndices(0,0);
+                        var produce2 = produce.GetCellAtIndices(1,0);
                     var prepared = left.GetCellAtIndices(0,1);
                 var general = shelfArea.GetCellAtIndices(1,0);
+                general.V.SplitAtParameter(.5);
+                    var general1 = general.GetCellAtIndices(0,0);
+                    var general2 = general.GetCellAtIndices(0,1);
                 var refrig = shelfArea.GetCellAtIndices(2,0);
-            
+                refrig.V.SplitAtParameter(.5);
+                    var refrig1 = refrig.GetCellAtIndices(0,0);
+                    var refrig2 = refrig.GetCellAtIndices(0,1);
+
             var entryMaterial = new Material("entry material",new Color(0,0,1,matAlpha));
             var frontMaterial = new Material("front material",new Color(.9,.7,.7,matAlpha));
             var checkoutMaterial = new Material("checkout material",new Color(0,.5,.5,matAlpha));
@@ -122,19 +131,24 @@ namespace SectionLayout
 
             //Label and return rooms --> shelf area excluded due to inclusion of sub-rooms
             //AddRoomFromCell(entryArea, "entry", entryMaterial, output.model, circulationWidth);
-            AddRoomFromCell(front1, "front1", frontMaterial, output.model, circulationWidth);
+            AddRoomFromCell(front1, "front", frontMaterial, output.model, circulationWidth);
             AddRoomFromCell(entry1, "entrance1", entryMaterial, output.model, circulationWidth);
-            AddRoomFromCell(front2, "front2", frontMaterial, output.model, circulationWidth);
+            AddRoomFromCell(front2, "front", frontMaterial, output.model, circulationWidth);
             AddRoomFromCell(entry2, "entrance2", entryMaterial, output.model, circulationWidth);
-            AddRoomFromCell(front3, "front3", frontMaterial, output.model, circulationWidth);
+            AddRoomFromCell(front3, "front", frontMaterial, output.model, circulationWidth);
             
             AddRoomFromCell(checkoutArea, "checkout", checkoutMaterial, output.model,circulationWidth);
             AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model, circulationWidth);
 
-            AddRoomFromCell(produce, "produce", produceMaterial, output.model, circulationWidth);
+            AddRoomFromCell(produce1, "produce", produceMaterial, output.model, circulationWidth);
+            AddRoomFromCell(produce2, "produce", produceMaterial, output.model, circulationWidth);
             AddRoomFromCell(prepared, "prepared", preparedMaterial, output.model, circulationWidth);
-            AddRoomFromCell(general, "general", generalMaterial, output.model, circulationWidth);
-            AddRoomFromCell(refrig, "refrig", refrigMaterial, output.model, circulationWidth);
+
+            AddRoomFromCell(general1, "general", generalMaterial, output.model, circulationWidth);
+            AddRoomFromCell(general2, "general", generalMaterial, output.model, circulationWidth);
+
+            AddRoomFromCell(refrig1, "refrig", refrigMaterial, output.model, circulationWidth);
+            AddRoomFromCell(refrig2, "refrig", refrigMaterial, output.model, circulationWidth);
             
 
 
