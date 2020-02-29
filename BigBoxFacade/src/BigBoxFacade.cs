@@ -58,22 +58,30 @@ namespace BigBoxFacade
                     {
                         var grid = new Grid1d(s);
                         var doorWidth = 4;
-                        var firstDoor = l / 10 * 3;
-                        var secondDoor = l / 10 * 7;
-                        grid.SplitAtPositions(new []{firstDoor - doorWidth / 2, firstDoor + doorWidth / 2, secondDoor - doorWidth / 2, secondDoor + doorWidth / 2});
+                        var firstDoor = l / 10 * 4;
+                        var secondDoor = l / 10 * 8;
+                        grid.SplitAtPositions(new []{firstDoor - doorWidth, firstDoor + doorWidth, secondDoor - doorWidth / 2, secondDoor + doorWidth / 2});
                         var lines = grid.GetCells().Select(c => c.GetCellGeometry()).OfType<Line>();
                         var wallIdx = 0;
                         foreach (var wallLine in lines)
                         {
                             var segmentLength = wallLine.Length();
                             var segmentTransform = new Transform(wallLine.Start + new Vector3(0,0,0), d, d.Cross(Vector3.ZAxis));
-                            if (wallIdx % 2 == 1)
+                            if (wallIdx == 1)
                             {
-                                CreateBranding(envelope.Height, new Transform(wallLine.Start.Average(wallLine.End), Vector3.ZAxis,0), output.model);
+                                CreateStandardPanel(segmentLength, 6, envelope.Height - 6, 0.1, segmentTransform, panelMat, out FacadePanel panel);
+                                output.model.AddElement(panel);
+                                CreateBranding(envelope.Height, 10, 28, true, new Transform(wallLine.Start.Average(wallLine.End), Vector3.ZAxis,0), output.model);
+                            }
+                            else if (wallIdx == 3)
+                            {
+                                CreateStandardPanel(segmentLength, 6, envelope.Height - 6, 0.1, segmentTransform, panelMat, out FacadePanel panel);
+                                output.model.AddElement(panel);
+                                CreateBranding(envelope.Height * 0.7, 5.5, 6, false, new Transform(wallLine.Start.Average(wallLine.End), Vector3.ZAxis,0), output.model);
                             }
                             else
                             {
-                                CreateStandardPanel(segmentLength, envelope.Height, 0.1, segmentTransform, panelMat, out FacadePanel panel);
+                                CreateStandardPanel(segmentLength, 0, envelope.Height, 0.1, segmentTransform, panelMat, out FacadePanel panel);
                                 output.model.AddElement(panel);
                             }
                             wallIdx++;
@@ -82,6 +90,7 @@ namespace BigBoxFacade
                     else
                     {
                         CreateStandardPanel(l,
+                                            0,
                                             envelope.Height,
                                             0.1,
                                             t,
@@ -104,16 +113,17 @@ namespace BigBoxFacade
         }
 
         private static void CreateStandardPanel(double width,
+                                                double bottom,
                                                 double height,
                                                 double thickness,
                                                 Transform lowerLeft,
                                                 Material material,
                                                 out FacadePanel facadePanel)
         {
-            var a = new Vector3(0,0,0);
-            var b = new Vector3(width,0,0);
-            var c = new Vector3(width, height, 0);
-            var d = new Vector3(0, height, 0);
+            var a = new Vector3(0,bottom,0);
+            var b = new Vector3(width,bottom,0);
+            var c = new Vector3(width, bottom+height, 0);
+            var d = new Vector3(0, bottom+height, 0);
 
             var profile = new Profile(new Polygon(new[]{a,b,c,d}.Shrink(0.01)));
             var solidOps = new List<SolidOperation>(){new Extrude(profile, thickness, Vector3.ZAxis, false)};
@@ -121,23 +131,41 @@ namespace BigBoxFacade
             facadePanel = new FacadePanel(thickness, lowerLeft, material, representation, false, Guid.NewGuid(), "");
         }
 
-        private static void CreateBranding(double height, Transform center, Model model)
+        private static void CreateBranding(double height, double columnDistance, double width, bool hasBacksplash, Transform center, Model model)
         {
-            var awningHeight = height * 0.4;
-            var awningMat = new Material("awning", new Color(0, 0.1, 0.5, 1), 0, 0);
+            var awningHeight = 6;
+            var awningMat = new Material("awning", new Color(0, 0.1, 0.7, 1), 0, 0);
             var depth = 2;
-            CreateColumn(-2.1, depth * -1.0 + 0.4, 0.3, awningHeight, center, awningMat, model);
-            CreateColumn(2.1, depth * -1.0 + 0.4, 0.3, awningHeight, center, awningMat, model);
-            var a = new Vector3(-4, 0, awningHeight);
-            var b = new Vector3(-2.5, depth * -1.0, awningHeight);
-            var c = new Vector3(2.5, depth * -1.0, awningHeight);
-            var d = new Vector3(4, 0, awningHeight);
-            var topHeight = height * 1.1;
+            CreateColumn(columnDistance / -2.0, depth * -1.0 + 0.4, 0.3, awningHeight, center, awningMat, model);
+            CreateColumn(columnDistance / 2.0, depth * -1.0 + 0.4, 0.3, awningHeight, center, awningMat, model);
 
-            var profile = new Profile(new Polygon(new[]{a,b,c,d}));
-            var solidOps = new List<SolidOperation>(){new Extrude(profile, topHeight - awningHeight, Vector3.ZAxis, false)};
-            var representation = new Representation(solidOps);
-            model.AddElement(new Envelope(profile, awningHeight, topHeight, Vector3.ZAxis, 0, center, awningMat, representation, false, Guid.NewGuid(), ""));
+            {
+                var a = new Vector3(width / -2.0, 0, awningHeight);
+                var b = new Vector3(width / -2.0, depth * -1.0, awningHeight);
+                var c = new Vector3(width / 2.0, depth * -1.0, awningHeight);
+                var d = new Vector3(width / 2.0, 0, awningHeight);
+                var topHeight = height * 1.1;
+
+                var profile = new Profile(new Polygon(new[]{a,b,c,d}));
+                var solidOps = new List<SolidOperation>(){new Extrude(profile, topHeight - awningHeight, Vector3.ZAxis, false)};
+                var representation = new Representation(solidOps);
+                model.AddElement(new Envelope(profile, awningHeight, topHeight, Vector3.ZAxis, 0, center, awningMat, representation, false, Guid.NewGuid(), ""));
+            }
+
+            if (hasBacksplash)
+            {
+                var backsplash = new Material("backsplash", new Color(1.0, 0.1, 0.1, 1), 0, 0);
+                var a = new Vector3(width / -2.0 + 1, 0, awningHeight-1.0);
+                var b = new Vector3(width / -2.0 + 1, depth * -0.5, awningHeight-1.0);
+                var c = new Vector3(width / 2.0 - 1, depth * -0.5, awningHeight-1.0);
+                var d = new Vector3(width / 2.0 - 1, 0, awningHeight-1.0);
+                var topHeight = height * 1.1;
+
+                var profile = new Profile(new Polygon(new[]{a,b,c,d}));
+                var solidOps = new List<SolidOperation>(){new Extrude(profile, topHeight - awningHeight + 2.0, Vector3.ZAxis, false)};
+                var representation = new Representation(solidOps);
+                model.AddElement(new Envelope(profile, awningHeight-1.0, topHeight+1.0, Vector3.ZAxis, 0, center, backsplash, representation, false, Guid.NewGuid(), ""));
+            }
         }
 
         private static void CreateColumn(double centerX, double centerY, double radius, double height, Transform transform, Material material, Model model)
