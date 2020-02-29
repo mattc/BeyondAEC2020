@@ -28,6 +28,18 @@ namespace PreparedFoodLayout
 		[JsonProperty("Counter Depth")]
 		public double CounterDepth {get;}
 
+		/// <summary>
+		/// The Space in front of prepared foods (in).
+		/// </summary>
+		[JsonProperty("Aisle Frontage")]
+		public double AisleFrontage {get;}
+
+		/// <summary>
+		/// The prepared foods counter ratio (%).
+		/// </summary>
+		[JsonProperty("Counter Radius Ratio")]
+		public double CounterRadiusRatio {get;}
+
 
         
         /// <summary>
@@ -38,6 +50,8 @@ namespace PreparedFoodLayout
         {
 			this.CounterHeight = 35;
 			this.CounterDepth = 48;
+			this.AisleFrontage = 144;
+			this.CounterRadiusRatio = 80;
 
         }
 
@@ -47,10 +61,12 @@ namespace PreparedFoodLayout
         /// </summary>
         /// <returns></returns>
         [JsonConstructor]
-        public PreparedFoodLayoutInputs(double counterheight, double counterdepth, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
+        public PreparedFoodLayoutInputs(double counterheight, double counterdepth, double aislefrontage, double counterradiusratio, string bucketName, string uploadsBucket, Dictionary<string, string> modelInputKeys, string gltfKey, string elementsKey, string ifcKey): base(bucketName, uploadsBucket, modelInputKeys, gltfKey, elementsKey, ifcKey)
         {
 			this.CounterHeight = counterheight;
 			this.CounterDepth = counterdepth;
+			this.AisleFrontage = aislefrontage;
+			this.CounterRadiusRatio = counterradiusratio;
 
 		}
 
