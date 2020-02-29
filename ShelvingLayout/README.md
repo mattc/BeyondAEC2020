@@ -15,4 +15,5 @@ The ShelvingLayout function.
 
 |Output Name|Type|Description|
 |---|---|---|
+|Linear Feet|Number|The number of linear feet of shelving|
 

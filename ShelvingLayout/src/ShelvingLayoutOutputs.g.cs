@@ -16,6 +16,12 @@ namespace ShelvingLayout
 {
     public class ShelvingLayoutOutputs: ResultsBase
     {
+		/// <summary>
+		/// The number of linear feet of shelving
+		/// </summary>
+		[JsonProperty("Linear Feet")]
+		public double LinearFeet {get;}
+
 
         
         /// <summary>
@@ -28,5 +34,21 @@ namespace ShelvingLayout
         }
 
 
+        /// <summary>
+        /// Construct a ShelvingLayoutOutputs specifying all inputs.
+        /// </summary>
+        /// <returns></returns>
+        [JsonConstructor]
+        public ShelvingLayoutOutputs(double linearfeet): base()
+        {
+			this.LinearFeet = linearfeet;
+
+		}
+
+		public override string ToString()
+		{
+			var json = JsonConvert.SerializeObject(this);
+			return json;
+		}
 	}
 }
