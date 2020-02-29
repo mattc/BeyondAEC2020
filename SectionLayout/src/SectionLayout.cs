@@ -144,10 +144,16 @@ namespace SectionLayout
             AddRoomFromCell(serviceArea, "service", serviceMaterial, output.model, circulationWidth, height);
 
 
-            AddRoomFromCell(produce, "produce", produceMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(produce1, "produce", produceMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(produce2, "produce", produceMaterial, output.model, circulationWidth, height);
+
             AddRoomFromCell(prepared, "prepared", preparedMaterial, output.model, circulationWidth, height);
-            AddRoomFromCell(general, "general", generalMaterial, output.model, circulationWidth, height);
-            AddRoomFromCell(refrig, "refrig", refrigMaterial, output.model, circulationWidth, height);
+            
+            AddRoomFromCell(general1, "general", generalMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(general2, "general", generalMaterial, output.model, circulationWidth, height);
+
+            AddRoomFromCell(refrig1, "refrig", refrigMaterial, output.model, circulationWidth, height);
+            AddRoomFromCell(refrig2, "refrig", refrigMaterial, output.model, circulationWidth, height);
             
 
 
